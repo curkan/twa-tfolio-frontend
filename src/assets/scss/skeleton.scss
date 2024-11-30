@@ -1,0 +1,32 @@
+.skeleton {
+  background-image: linear-gradient(to right, var(--vt-c-black-mute) 0%, var(--vt-c-black-light) 10%, var(--vt-c-black-mute) 20%, var(--vt-c-black-mute) 100%);
+  background-size: 200% 100%;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  animation: bgAnimate 1.2s linear infinite;
+}
+
+@keyframes bgAnimate {
+  0% {
+    background-position: 50% 0;
+  }
+
+  100% {
+    background-position: -150% 0;
+  }
+}
+
+
+img[lazy=loading] {
+  background-image: linear-gradient(to right, var(--vt-c-black-mute) 0%, var(--vt-c-black-light) 10%, var(--vt-c-black-mute) 20%, var(--vt-c-black-mute) 100%);
+  background-size: 200% 100%;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  animation: bgAnimate 1.2s linear infinite;
+  /*your style here*/
+}
+img[lazy=error] {
+  background: var(--vt-c-black-mute);
+}
+img[lazy=loaded] {
+  /*your style here*/
+}
+

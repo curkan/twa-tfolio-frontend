@@ -7,6 +7,7 @@
   --vt-c-black: #212121;
   --vt-c-black-soft: #2C2C2C;
   --vt-c-black-mute: #404040;
+  --vt-c-black-light: #454545;
 
   --vt-c-indigo: #2c3e50;
 
@@ -115,4 +116,5 @@ button, input[type="submit"], input[type="reset"] {
 }
 
 #app {
+  color: var(--vt-c-white-soft);
 }

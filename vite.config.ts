@@ -8,7 +8,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 export default defineConfig({
   plugins: [
     vue(),
-    vueDevTools(),
+    // vueDevTools(),
   ],
 
   resolve: {
@@ -20,12 +20,9 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         api: 'modern-compiler', // or "modern", "legacy"
-        // additionalData: `
-        //   @import "./src/styles/_animations.scss";
-        //   @import "./src/styles/_variables.scss";
-        //   @import "./src/styles/_mixins.scss";
-        //   @import "./src/styles/_helpers.scss";
-        // `
+        additionalData: `
+          @use "@/assets/scss/skeleton.scss";
+        `
       },
     },
   },
