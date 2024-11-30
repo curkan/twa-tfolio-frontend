@@ -239,7 +239,6 @@ function updateInfo() {
 <style>
 </style>
 <style scoped lang="scss">
-/* @use 'gridstack/dist/gridstack.min.css'; */
-@use '@/assets/scss/base.scss';
+@use '@/assets/scss/grid.scss';
 
 </style>
