@@ -5,7 +5,7 @@
   --vt-c-white-mute: #f2f2f2;
 
   --vt-c-black: #212121;
-  --vt-c-black-soft: #2C2C2C;
+  --vt-c-black-soft: #2c2c2c;
   --vt-c-black-mute: #404040;
   --vt-c-black-light: #454545;
 
@@ -60,11 +60,13 @@
   user-select: none;
 }
 
-body::-webkit-scrollbar, html::-webkit-scrollbar {
-    display: none;
+body::-webkit-scrollbar,
+html::-webkit-scrollbar {
+  display: none;
 }
 
-body, html {
+body,
+html {
   -webkit-font-smoothing: antialiased;
   -webkit-font-smoothing: antialiased;
   scrollbar-width: none;
@@ -72,21 +74,21 @@ body, html {
   overscroll-behavior-x: none;
 }
 body {
-    padding-top: calc(var(--tg-safe-area-inset-top) + var(--tg-content-safe-area-inset-top));
-    min-height: var(--tg-viewport-stable-height);
-    max-height: var(--tg-viewport-stable-height);
-    height: var(--tg-viewport-stable-height);
-    overflow-x: hidden;
-    color: var(--color-text);
-    background: var(--color-background);
-    display: flex;
-    place-items: center;
+  padding-top: calc(var(--tg-safe-area-inset-top) + var(--tg-content-safe-area-inset-top));
+  min-height: var(--tg-viewport-stable-height);
+  max-height: var(--tg-viewport-stable-height);
+  height: var(--tg-viewport-stable-height);
+  overflow-x: hidden;
+  color: var(--color-text);
+  background: var(--color-background);
+  display: flex;
+  place-items: center;
 
-    transition:
+  transition:
     color 0.5s,
     background-color 0.5s;
-    line-height: 1.6;
-    font-family:
+  line-height: 1.6;
+  font-family:
     Inter,
     -apple-system,
     BlinkMacSystemFont,
@@ -99,20 +101,22 @@ body {
     'Droid Sans',
     'Helvetica Neue',
     sans-serif;
-    font-size: 15px;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  font-size: 15px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-button, input[type="submit"], input[type="reset"] {
-	background: none;
-	color: inherit;
-	border: none;
-	padding: 0;
-	font: inherit;
-	cursor: pointer;
-	outline: inherit;
+button,
+input[type='submit'],
+input[type='reset'] {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
 }
 
 #app {
