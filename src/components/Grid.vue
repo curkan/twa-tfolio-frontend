@@ -1,19 +1,28 @@
 <script setup lang="ts">
-import { GridStack, type GridItemHTMLElement, type GridStackNode } from 'gridstack'
-import { createApp, ref, onMounted, nextTick } from 'vue'
+import {
+  GridStack,
+  type GridItemHTMLElement,
+  type GridStackNode,
+  type GridStackWidget,
+} from 'gridstack'
+import { createApp, ref, onMounted, nextTick, reactive } from 'vue'
 import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
 import { useWebApp, useWebAppHapticFeedback } from 'vue-tg'
 import IconPlus from './icons/IconPlus.vue'
 import IconRemove from './icons/IconRemove.vue'
+import { showFailToast, showImagePreview, showLoadingToast } from 'vant'
+import { useHandleDoubleTap } from '@/composables/handles/useHandleDoubleTap'
+import { useHandleUploadImage } from '@/composables/handles/useHandleUploadImage'
+import defaultNodes from '@/configs/defaultNodes.config'
+
+const fileInput = ref<HTMLInputElement>()
 
 let count = ref(0)
-let info = ref('')
-let gridFloat = ref(false)
-let color = ref('black')
-let gridInfo = ref('')
-let grid = null as GridStack // DO NOT use ref(null) as proxies GS will break all logic when comparing structures... see https://github.com/gridstack/gridstack.js/issues/2115
-let items = ref([])
+// DO NOT use ref(null) as proxies GS will break all logic when comparing structures... see https://github.com/gridstack/gridstack.js/issues/2115
+let grid: GridStack | null = null
+
+let items = ref<GridStackWidget[]>([])
 const visibleRemove = ref(false)
 
 const testImages = ref([
@@ -35,75 +44,19 @@ window.Telegram.WebApp.setBackgroundColor('#212121')
 window.Telegram.WebApp.setBottomBarColor('#212121')
 window.Telegram.WebApp.setBottomBarColor('#212121')
 window.Telegram.WebApp.expand()
+
 if (window.Telegram.WebApp.isVersionAtLeast('8.0')) {
   window.Telegram.WebApp.requestFullscreen()
 }
+
 onMounted(() => {
-  // GridStack.setupDragIn('.sidebar .grid-stack-item', {pause: 500});
   grid = GridStack.init({
-    // DO NOT user grid.value = GridStack.init(), see above
     float: false,
     column: 4,
   })
 
   let nodes = []
-
-  nodes = [
-    {
-      x: 0,
-      y: 0,
-      w: 2,
-      h: 2,
-    },
-    {
-      x: 2,
-      y: 2,
-      w: 1,
-      h: 1,
-    },
-    {
-      x: 3,
-      y: 2,
-      w: 1,
-      h: 1,
-    },
-    {
-      x: 2,
-      y: 3,
-      w: 1,
-      h: 1,
-    },
-    {
-      x: 3,
-      y: 3,
-      w: 1,
-      h: 1,
-    },
-    {
-      x: 0,
-      y: 3,
-      w: 4,
-      h: 2,
-    },
-    {
-      x: 0,
-      y: 5,
-      w: 2,
-      h: 2,
-    },
-    {
-      x: 2,
-      y: 5,
-      w: 2,
-      h: 2,
-    },
-  ]
-
-  // items.value.push(...nodes);
-  grid.on('dragstop', function (event, element) {
-    const node = element.gridstackNode
-    info.value = `you just dragged node #${node.id} to ${node.x},${node.y} – good job!`
-  })
+  nodes = Array.from(defaultNodes)
 
   grid.on('change', onChange)
 
@@ -116,28 +69,36 @@ onMounted(() => {
     if (el.gridstackNode) {
       let node: GridStackNode = el.gridstackNode
     }
-    grid.enableMove(false)
+    grid?.enableMove(false)
 
     useWebAppHapticFeedback().impactOccurred('light')
   })
 
   grid.on('dragstop', function (event: Event, el: GridItemHTMLElement) {
-    grid.enableMove(true)
+    grid?.enableMove(true)
     useWebAppHapticFeedback().selectionChanged()
   })
 
   nodes.forEach((node) => {
     node.id = 'w_' + count.value++
     items.value.push(node)
+
     nextTick(() => {
-      grid.makeWidget(node.id)
-      updateInfo()
+      grid?.makeWidget(node.id)
     })
   })
-  // gridFloat.value = grid.float();
 })
 
-function removeVisibleIcon() {
+const openImagePreview = (link: string, startPosition: number) => {
+  showImagePreview({
+    images: testImages.value,
+    closeOnClickOverlay: true,
+    startPosition: startPosition ?? 1,
+    closeable: true,
+  })
+}
+
+const removeVisibleIcon = () => {
   visibleRemove.value = false
   var elements = Array.from(document.getElementsByClassName('grid-stack-item'))
   elements.forEach(function (element) {
@@ -145,72 +106,70 @@ function removeVisibleIcon() {
   })
 }
 
-function onChange(event, changeItems) {
-  updateInfo()
-  // update item position
-  changeItems.forEach((item) => {
-    var widget = items.value.find((w) => w.id == item.id)
-    // console.log(widget)
-    if (!widget) {
-      alert('Widget not found: ' + item.id)
-      return
-    }
-    widget.x = item.x
-    widget.y = item.y
-    widget.w = item.w
-    widget.h = item.h
+const onChange = (event: Event, changeItems: any) => {
+  changeItems.forEach((item: any) => {
+    const widget = items.value.find((w: GridStackWidget) => w.id === item.id)
+
+    if (!widget) return
+
+    const updatedWidget = widget as GridStackWidget
+    updatedWidget.x = item.x
+    updatedWidget.y = item.y
+    updatedWidget.w = item.w
+    updatedWidget.h = item.h
   })
 }
 
-const handleTouch = (e: TouchEvent) => {
-  if (e.target.classList.contains('ui-resizable-handle')) {
+const handleTouch = (e: Event) => {
+  if ((e.target as HTMLElement).classList.contains('ui-resizable-handle')) {
     return
   }
+
+  let target = e.target as HTMLElement
   removeVisibleIcon()
-  e.target.closest('.grid-stack-item').classList.add('ui-remove-visible')
+
+  target.closest('.grid-stack-item')?.classList.add('ui-remove-visible')
   visibleRemove.value = !visibleRemove.value
 }
 
-function addNewWidget2() {
+const triggerFileInput = () => {
+  fileInput?.value?.click()
+}
+
+const addNewWidget = () => {
   const node = items[count.value] || { x: 0, y: 0, w: 2, h: 2 }
 
   node.id = 'w_' + count.value++
   items.value.push(node)
   nextTick(() => {
-    grid.makeWidget(node.id)
-    updateInfo()
+    grid?.makeWidget(node.id)
   })
 }
 
-function removeLastWidget() {
-  if (count.value == 0) return
-  var id = `w_${count.value - 1}`
-  var index = items.value.findIndex((w) => w.id == id)
-  if (index < 0) return
-  var removed = items.value[index]
-  remove(removed)
-}
-
-function remove(widget) {
-  var index = items.value.findIndex((w) => w.id == widget.id)
+const remove = (widget: GridStackWidget) => {
   const selector = `#${widget.id}`
-  grid.removeWidget(selector, true)
-}
-
-function updateInfo() {
-  color.value = grid.engine.nodes.length == items.value.length ? 'black' : 'red'
-  gridInfo.value = `Grid engine: ${grid.engine.nodes.length}, widgets: ${items.value.length}`
+  grid?.removeWidget(selector, true)
 }
 </script>
 
 <template>
-  <button class="add-new-widget" type="button" @click="addNewWidget2()">
+  <button class="add-new-widget" type="button" @click="triggerFileInput">
     <IconPlus />
+    <label style="display: none">
+      <input
+        id="newImage"
+        type="file"
+        name="newImage"
+        accept=".png, .jpg, .webp"
+        ref="fileInput"
+        @change="useHandleUploadImage($event, [], addNewWidget)"
+      />
+    </label>
   </button>
 
   <div class="grid-stack">
     <div
-      v-for="(w, indexs) in items"
+      v-for="(w, index) in items"
       @click="handleTouch"
       @touchstart="handleTouch"
       class="grid-stack-item"
@@ -224,7 +183,10 @@ function updateInfo() {
     >
       <div class="grid-stack-item-content">
         <div class="img">
-          <img v-lazy="testImages[indexs]" alt="" />
+          <img
+            v-lazy="testImages[index]"
+            @click="useHandleDoubleTap(index, [testImages[index], index], openImagePreview)"
+          />
         </div>
         <button v-if="visibleRemove" class="ui-remove" @click="remove(w)"><IconRemove /></button>
       </div>

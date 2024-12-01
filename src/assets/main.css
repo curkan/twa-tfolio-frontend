@@ -28,3 +28,7 @@ a,
   background-position: center;
   opacity: 0.6;
 }
+
+.van-image-preview__close-icon {
+  padding-top: calc(var(--tg-safe-area-inset-top) + var(--tg-content-safe-area-inset-top));
+}

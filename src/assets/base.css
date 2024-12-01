@@ -37,6 +37,12 @@
   --section-gap: 160px;
 }
 
+:root:root {
+  --van-uploader-border-radius: 10px;
+  --van-image-preview-close-icon-size: 35px;
+  --van-uploader-file-background: var(--vt-c-black-soft);
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --color-background: var(--vt-c-black);
