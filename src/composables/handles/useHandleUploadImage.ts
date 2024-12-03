@@ -1,4 +1,6 @@
 import { showFailToast, showLoadingToast } from 'vant'
+import axios from 'axios'
+import testUserDate from '@/configs/userData.config'
 
 export const useHandleUploadImage = async (
   event: Event,
@@ -17,11 +19,25 @@ export const useHandleUploadImage = async (
 
         showLoadingToast({
           message: 'Loading...',
-          forbidClick: true,
+          closeOnClickOverlay: true,
           loadingType: 'spinner',
         })
 
-        callback(...args)
+        const apiUrl = 'http://backend.tgfolio.tg.localhost:81/api/v1/common/upload-image';
+
+        axios.postForm(apiUrl, formData, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + testUserDate
+          },
+        })
+        .then((response) => {
+            callback(...args, response.data.data)
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
+
       } else {
         showFailToast({
           message: 'Big file size',

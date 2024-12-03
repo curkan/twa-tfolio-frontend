@@ -2,42 +2,33 @@
 import {
   GridStack,
   type GridItemHTMLElement,
+  type GridStackElement,
   type GridStackNode,
   type GridStackWidget,
 } from 'gridstack'
-import { createApp, ref, onMounted, nextTick, reactive } from 'vue'
+import { ref, onMounted, nextTick, reactive, watch } from 'vue'
 import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
-import { useWebApp, useWebAppHapticFeedback } from 'vue-tg'
+import { useWebAppHapticFeedback } from 'vue-tg'
 import IconPlus from './icons/IconPlus.vue'
 import IconRemove from './icons/IconRemove.vue'
-import { showFailToast, showImagePreview, showLoadingToast } from 'vant'
+import { showImagePreview, showLoadingToast } from 'vant'
 import { useHandleDoubleTap } from '@/composables/handles/useHandleDoubleTap'
 import { useHandleUploadImage } from '@/composables/handles/useHandleUploadImage'
-import defaultNodes from '@/configs/defaultNodes.config'
+import {useAuth} from '@/composables/auth/auth'
+import type {Node} from '@/composables/types/grid.type'
+import {gridData, useGetGridData} from '@/composables/grid/useGetGridData'
+import {useUpdateGrid} from '@/composables/grid/useUpdateGrid'
 
 const fileInput = ref<HTMLInputElement>()
+const nodes = ref<Node[]>()
+const gridFirstLoaded = ref<boolean>(false)
 
-let count = ref(0)
 // DO NOT use ref(null) as proxies GS will break all logic when comparing structures... see https://github.com/gridstack/gridstack.js/issues/2115
 let grid: GridStack | null = null
 
 let items = ref<GridStackWidget[]>([])
 const visibleRemove = ref(false)
-
-const testImages = ref([
-  'https://storage.yandexcloud.net/tgfolio-prod-images/Cozy%20Outdoor%20Reading%20Spot.jpeg',
-  'https://storage.yandexcloud.net/tgfolio-prod-images/Disposable%20Coffee%20Cup%20on%20Blue%20Background.jpeg',
-  'https://storage.yandexcloud.net/tgfolio-prod-images/Elegant%20Woman%20in%20Monochrome.jpeg',
-  'https://storage.yandexcloud.net/tgfolio-prod-images/Futuristic%20Virtual%20Reality%20Experience-2.jpeg',
-  'https://storage.yandexcloud.net/tgfolio-prod-images/Futuristic%20Virtual%20Reality%20Experience.jpeg',
-  'https://storage.yandexcloud.net/tgfolio-prod-images/Minimalist%20Luxury%20Design.jpeg',
-  'https://storage.yandexcloud.net/tgfolio-prod-images/Serene%20Mountainous%20Landscape%20at%20Dawn_Dusk.jpeg',
-  'https://storage.yandexcloud.net/tgfolio-prod-images/Serene%20Portrait%20of%20a%20Young%20Woman.jpeg',
-  'https://storage.yandexcloud.net/tgfolio-prod-images/Stacked%20Fruits%20and%20Objects.jpeg',
-  'https://storage.yandexcloud.net/tgfolio-prod-images/Urban%20Trendsetters%20Step.jpeg',
-  'https://storage.yandexcloud.net/tgfolio-prod-images/Vibrant%20Rose%20with%20Water%20Droplets.jpeg',
-])
 
 window.Telegram.WebApp.setHeaderColor('#212121')
 window.Telegram.WebApp.setBackgroundColor('#212121')
@@ -49,16 +40,42 @@ if (window.Telegram.WebApp.isVersionAtLeast('8.0')) {
   window.Telegram.WebApp.requestFullscreen()
 }
 
-onMounted(() => {
+
+onMounted(async () => {
+  useAuth()
+
+  await useGetGridData();
+
+  watch(
+    () => gridData.value,
+    () => {
+      grid?.removeAll()
+
+      nodes.value = gridData.value?.grid
+      nodes.value?.forEach((node: Node) => {
+        node.internalId = node.id
+        node.id = 'w_' + node.sort
+        console.log(node)
+        items.value.push(node as GridStackWidget)
+
+        nextTick(() => {
+          grid?.makeWidget(node.id as GridStackElement)
+        })
+      })
+
+      nextTick(() => {
+        gridFirstLoaded.value = true
+      })
+    }
+  )
+
   grid = GridStack.init({
     float: false,
     column: 4,
   })
 
-  let nodes = []
-  nodes = Array.from(defaultNodes)
-
   grid.on('change', onChange)
+  grid.on('removed', onChange)
 
   grid.on('resizestart', function (event: Event, el: GridItemHTMLElement) {
     removeVisibleIcon()
@@ -78,20 +95,11 @@ onMounted(() => {
     grid?.enableMove(true)
     useWebAppHapticFeedback().selectionChanged()
   })
-
-  nodes.forEach((node) => {
-    node.id = 'w_' + count.value++
-    items.value.push(node)
-
-    nextTick(() => {
-      grid?.makeWidget(node.id)
-    })
-  })
 })
 
 const openImagePreview = (link: string, startPosition: number) => {
   showImagePreview({
-    images: testImages.value,
+    images: gridData.value?.grid.map(a => a.image.original),
     closeOnClickOverlay: true,
     startPosition: startPosition ?? 1,
     closeable: true,
@@ -107,6 +115,8 @@ const removeVisibleIcon = () => {
 }
 
 const onChange = (event: Event, changeItems: any) => {
+  if (gridFirstLoaded.value === false) return
+
   changeItems.forEach((item: any) => {
     const widget = items.value.find((w: GridStackWidget) => w.id === item.id)
 
@@ -118,6 +128,20 @@ const onChange = (event: Event, changeItems: any) => {
     updatedWidget.w = item.w
     updatedWidget.h = item.h
   })
+
+  const gridStackItems = document.querySelectorAll('.grid-stack .grid-stack-item');
+  const newData = Array.from(gridStackItems).map((el) => {
+    return {
+      id: el.getAttribute('internal-id'),
+      sort: el.getAttribute('id'),
+      x: el.getAttribute('gs-x'),
+      y: el.getAttribute('gs-y'),
+      w: el.getAttribute('gs-w') ?? 1,
+      h: el.getAttribute('gs-h') ?? 1
+    };
+  });
+
+  useUpdateGrid(newData)
 }
 
 const handleTouch = (e: Event) => {
@@ -136,13 +160,15 @@ const triggerFileInput = () => {
   fileInput?.value?.click()
 }
 
-const addNewWidget = () => {
-  const node = items[count.value] || { x: 0, y: 0, w: 2, h: 2 }
+const addNewWidget = (newNode: Node) => {
+  const node = newNode
 
-  node.id = 'w_' + count.value++
-  items.value.push(node)
+  node.internalId = node.id
+  node.id = 'w_' + newNode.id
+  items.value.push(node as GridStackWidget)
+
   nextTick(() => {
-    grid?.makeWidget(node.id)
+    grid?.makeWidget(node.id as GridStackElement)
   })
 }
 
@@ -160,7 +186,7 @@ const remove = (widget: GridStackWidget) => {
         id="newImage"
         type="file"
         name="newImage"
-        accept=".png, .jpg, .webp"
+        accept=".png, .jpg, .webp, .jpeg"
         ref="fileInput"
         @change="useHandleUploadImage($event, [], addNewWidget)"
       />
@@ -177,16 +203,17 @@ const remove = (widget: GridStackWidget) => {
       :gs-y="w.y"
       :gs-w="w.w"
       :gs-h="w.h"
-      :gs-id="w.id"
+      :gs-id="w.internalId"
+      :internal-id="w.internalId"
       :id="w.id"
       :key="w.id"
     >
       <div class="grid-stack-item-content">
         <div class="img">
-          <img
-            v-lazy="testImages[index]"
-            @click="useHandleDoubleTap(index, [testImages[index], index], openImagePreview)"
-          />
+            <img
+              v-lazy="{ src: w?.image?.sm, delay: 300 }"
+              @click="useHandleDoubleTap(index, [w.image.sm, index], openImagePreview)"
+            />
         </div>
         <button v-if="visibleRemove" class="ui-remove" @click="remove(w)"><IconRemove /></button>
       </div>
