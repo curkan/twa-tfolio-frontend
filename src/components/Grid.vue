@@ -15,10 +15,10 @@ import IconRemove from './icons/IconRemove.vue'
 import { showImagePreview, showLoadingToast } from 'vant'
 import { useHandleDoubleTap } from '@/composables/handles/useHandleDoubleTap'
 import { useHandleUploadImage } from '@/composables/handles/useHandleUploadImage'
-import {useAuth} from '@/composables/auth/auth'
-import type {Node} from '@/composables/types/grid.type'
-import {gridData, useGetGridData} from '@/composables/grid/useGetGridData'
-import {useUpdateGrid} from '@/composables/grid/useUpdateGrid'
+import { useAuth } from '@/composables/auth/auth'
+import type { Node } from '@/composables/types/grid.type'
+import { gridData, useGetGridData } from '@/composables/grid/useGetGridData'
+import { useUpdateGrid } from '@/composables/grid/useUpdateGrid'
 
 const fileInput = ref<HTMLInputElement>()
 const nodes = ref<Node[]>()
@@ -40,11 +40,8 @@ if (window.Telegram.WebApp.isVersionAtLeast('8.0')) {
   window.Telegram.WebApp.requestFullscreen()
 }
 
-
 onMounted(async () => {
-  useAuth()
-
-  await useGetGridData();
+  await useGetGridData()
 
   watch(
     () => gridData.value,
@@ -55,7 +52,6 @@ onMounted(async () => {
       nodes.value?.forEach((node: Node) => {
         node.internalId = node.id
         node.id = 'w_' + node.sort
-        console.log(node)
         items.value.push(node as GridStackWidget)
 
         nextTick(() => {
@@ -66,7 +62,7 @@ onMounted(async () => {
       nextTick(() => {
         gridFirstLoaded.value = true
       })
-    }
+    },
   )
 
   grid = GridStack.init({
@@ -99,7 +95,7 @@ onMounted(async () => {
 
 const openImagePreview = (link: string, startPosition: number) => {
   showImagePreview({
-    images: gridData.value?.grid.map(a => a.image.original),
+    images: gridData.value?.grid.map((a) => a.image.original),
     closeOnClickOverlay: true,
     startPosition: startPosition ?? 1,
     closeable: true,
@@ -129,7 +125,7 @@ const onChange = (event: Event, changeItems: any) => {
     updatedWidget.h = item.h
   })
 
-  const gridStackItems = document.querySelectorAll('.grid-stack .grid-stack-item');
+  const gridStackItems = document.querySelectorAll('.grid-stack .grid-stack-item')
   const newData = Array.from(gridStackItems).map((el) => {
     return {
       id: el.getAttribute('internal-id'),
@@ -137,9 +133,9 @@ const onChange = (event: Event, changeItems: any) => {
       x: el.getAttribute('gs-x'),
       y: el.getAttribute('gs-y'),
       w: el.getAttribute('gs-w') ?? 1,
-      h: el.getAttribute('gs-h') ?? 1
-    };
-  });
+      h: el.getAttribute('gs-h') ?? 1,
+    }
+  })
 
   useUpdateGrid(newData)
 }
@@ -210,10 +206,10 @@ const remove = (widget: GridStackWidget) => {
     >
       <div class="grid-stack-item-content">
         <div class="img">
-            <img
-              v-lazy="{ src: w?.image?.sm, delay: 300 }"
-              @click="useHandleDoubleTap(index, [w.image.sm, index], openImagePreview)"
-            />
+          <img
+            v-lazy="{ src: w?.image?.sm, delay: 300 }"
+            @click="useHandleDoubleTap(index, [w.image.sm, index], openImagePreview)"
+          />
         </div>
         <button v-if="visibleRemove" class="ui-remove" @click="remove(w)"><IconRemove /></button>
       </div>
@@ -221,7 +217,6 @@ const remove = (widget: GridStackWidget) => {
   </div>
 </template>
 
-<style></style>
 <style scoped lang="scss">
 @use '@/assets/scss/grid.scss';
 </style>

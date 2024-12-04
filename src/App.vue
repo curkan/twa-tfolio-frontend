@@ -13,7 +13,6 @@ useWebAppMainButton().setMainButtonParams({
 <template>
   <van-config-provider theme="dark" />
   <UserHeader />
-
   <Grid />
 </template>
 

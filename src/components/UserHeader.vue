@@ -1,37 +1,53 @@
 <script setup lang="ts">
+import { useAuth } from '@/composables/auth/auth'
+import { useUserStore } from '@/composables/stores/useUserStore'
+import { useUpdateUser } from '@/composables/user/useUpdateUser'
 import { showSuccessToast } from 'vant'
-import { ref, watch } from 'vue'
-import { useWebApp, useWebAppHapticFeedback, useWebAppMainButton } from 'vue-tg'
+import { onMounted, ref, watch } from 'vue'
+import { useWebAppHapticFeedback } from 'vue-tg'
+import LocaleSwitcher from './main/LocaleSwitcher.vue'
 const showEditProfile = ref(false)
-const displayName = ref(useWebApp().initDataUnsafe.user?.username)
-const aboutYou = ref('Just a little bit more')
+const displayName = ref()
+const biography = ref()
+const loading = ref(true)
+
+onMounted(() => {
+  useAuth().then(() => {
+    loading.value = false
+    // displayName.value = useUserStore().authUser?.display_name
+    biography.value = useUserStore().authUser?.biography
+  })
+})
 
 const saveUserProfile = () => {
   showEditProfile.value = false
-
-
-
-
-  useWebAppHapticFeedback().notificationOccurred('success')
-  showSuccessToast('Success')
+  useUpdateUser(displayName.value, biography.value).then((response) => {
+    useWebAppHapticFeedback().notificationOccurred('success')
+    showSuccessToast('Success')
+  })
 }
-
-const imageList = ref([{ url: useWebApp().initDataUnsafe.user?.photo_url }])
 </script>
 
 <template>
+  <div class="locale-block">
+    <LocaleSwitcher />
+  </div>
   <div class="user">
     <div class="logo">
-      <van-uploader v-model="imageList" reupload max-count="1" :preview-size="100" />
-
-      <!-- <img v-lazy="useWebApp().initDataUnsafe.user?.photo_url" alt="" srcset="" /> -->
+      <img
+        v-if="useUserStore().authUser?.photo_url"
+        v-lazy="{ src: useUserStore().authUser?.photo_url, error: '/images/not-logo.png' }"
+      />
+      <van-skeleton-image v-else />
     </div>
     <div class="info" @click="showEditProfile = !showEditProfile">
-      <div class="username">
-        {{ useWebApp().initDataUnsafe.user?.first_name }}
-        {{ useWebApp().initDataUnsafe.user?.last_name }}
+      <div v-if="loading">
+        <van-skeleton title :row="1" />
       </div>
-      <div class="biography">{{ aboutYou }}</div>
+      <div class="username" v-if="!loading">
+        {{ useUserStore().authUser?.display_name }}
+      </div>
+      <div class="biography">{{ useUserStore().authUser?.biography }}</div>
     </div>
   </div>
   <van-popup
@@ -49,22 +65,24 @@ const imageList = ref([{ url: useWebApp().initDataUnsafe.user?.photo_url }])
         <van-field
           v-model="displayName"
           name="displayName"
-          label="Display Name"
+          :label="$t('userDisplayName')"
           placeholder="Display name"
           @keypress=""
           :rules="[{ required: true, message: 'Display name is required' }]"
         />
 
         <van-field
-          v-model="aboutYou"
+          v-model="biography"
           name="about"
-          label="About you"
+          :label="$t('userBiography')"
           placeholder="Write about you"
         />
       </van-cell-group>
     </div>
     <div class="button">
-      <van-button type="primary" size="large" @click="saveUserProfile">Save</van-button>
+      <van-button type="primary" size="large" @click="saveUserProfile">{{
+        $t('main.save')
+      }}</van-button>
     </div>
   </van-popup>
 </template>

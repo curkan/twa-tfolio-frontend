@@ -20,4 +20,3 @@ export interface Image {
   sm: string
   xs: string
 }
-

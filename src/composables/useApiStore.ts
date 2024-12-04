@@ -15,7 +15,8 @@ export const useApiStore = defineStore('useApiStore', () => {
     return http
       .get(url, config)
       .then((response) => {
-        if (snackBarText) { // Optional, if we want to show SnackBar for some success responses (eg data update))
+        if (snackBarText) {
+          // Optional, if we want to show SnackBar for some success responses (eg data update))
           // snackBarStore.showSnackBar(snackBarText)
         }
         return response?.data
@@ -33,13 +34,14 @@ export const useApiStore = defineStore('useApiStore', () => {
     url: string,
     data = {},
     config = {},
-    snackBarText = ''
+    snackBarText = '',
   ): Promise<AxiosResponse | void | any> {
     // spinnerStore.showSpinner() // Optional (if we have a centralized loader to show)
     return http
       .post(url, data, config)
       .then((response) => {
-        if (snackBarText) { // Optional, if we want to show SnackBar for some success responses (eg data update))
+        if (snackBarText) {
+          // Optional, if we want to show SnackBar for some success responses (eg data update))
           // snackBarStore.showSnackBar(snackBarText)
         }
 
@@ -58,13 +60,14 @@ export const useApiStore = defineStore('useApiStore', () => {
     url: string,
     data: FormData,
     config = {},
-    snackBarText = ''
+    snackBarText = '',
   ): Promise<AxiosResponse | void | any> {
     // spinnerStore.showSpinner() // Optional (if we have a centralized loader to show)
     return http
       .postForm(url, data, config)
       .then((response) => {
-        if (snackBarText) { // Optional, if we want to show SnackBar for some success responses (eg data update))
+        if (snackBarText) {
+          // Optional, if we want to show SnackBar for some success responses (eg data update))
           // snackBarStore.showSnackBar(snackBarText)
         }
 
@@ -79,18 +82,18 @@ export const useApiStore = defineStore('useApiStore', () => {
       })
   }
 
-
   function put(
     url: string,
     data = {},
     config = {},
-    snackBarText = ''
+    snackBarText = '',
   ): Promise<AxiosResponse | void | any> {
     // spinnerStore.showSpinner() // Optional (if we have a centralized loader to show)
     return http
       .put(url, data, config)
       .then((response) => {
-        if (snackBarText) { // Optional, if we want to show SnackBar for some success responses (eg data update))
+        if (snackBarText) {
+          // Optional, if we want to show SnackBar for some success responses (eg data update))
           // snackBarStore.showSnackBar(snackBarText)
         }
 

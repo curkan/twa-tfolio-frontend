@@ -23,21 +23,21 @@ export const useHandleUploadImage = async (
           loadingType: 'spinner',
         })
 
-        const apiUrl = 'http://backend.tgfolio.tg.localhost:81/api/v1/common/upload-image';
+        const apiUrl = 'http://backend.tgfolio.tg.localhost:81/api/v1/common/upload-image'
 
-        axios.postForm(apiUrl, formData, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + testUserDate
-          },
-        })
-        .then((response) => {
+        axios
+          .postForm(apiUrl, formData, {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: 'Bearer ' + testUserDate,
+            },
+          })
+          .then((response) => {
             callback(...args, response.data.data)
-        })
-        .catch((error) => {
-          console.error('Error fetching data:', error);
-        });
-
+          })
+          .catch((error) => {
+            console.error('Error fetching data:', error)
+          })
       } else {
         showFailToast({
           message: 'Big file size',

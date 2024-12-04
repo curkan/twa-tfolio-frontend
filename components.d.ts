@@ -15,6 +15,7 @@ declare module 'vue' {
     IconRemove: typeof import('./src/components/icons/IconRemove.vue')['default']
     IconSupport: typeof import('./src/components/icons/IconSupport.vue')['default']
     IconTooling: typeof import('./src/components/icons/IconTooling.vue')['default']
+    LocaleSwitcher: typeof import('./src/components/main/LocaleSwitcher.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     UserHeader: typeof import('./src/components/UserHeader.vue')['default']
@@ -22,7 +23,12 @@ declare module 'vue' {
     VanCellGroup: typeof import('vant/es')['CellGroup']
     VanConfigProvider: typeof import('vant/es')['ConfigProvider']
     VanField: typeof import('vant/es')['Field']
+    VanFloatingBubble: typeof import('vant/es')['FloatingBubble']
+    VanPopover: typeof import('vant/es')['Popover']
     VanPopup: typeof import('vant/es')['Popup']
+    VanSkeleton: typeof import('vant/es')['Skeleton']
+    VanSkeletonImage: typeof import('vant/es')['SkeletonImage']
+    VanSkeletonParagraph: typeof import('vant/es')['SkeletonParagraph']
     VanUploader: typeof import('vant/es')['Uploader']
   }
 }
