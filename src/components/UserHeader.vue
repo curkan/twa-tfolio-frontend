@@ -8,6 +8,10 @@ const aboutYou = ref('Just a little bit more')
 
 const saveUserProfile = () => {
   showEditProfile.value = false
+
+
+
+
   useWebAppHapticFeedback().notificationOccurred('success')
   showSuccessToast('Success')
 }

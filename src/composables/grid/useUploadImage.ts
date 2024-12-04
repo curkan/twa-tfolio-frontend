@@ -1,27 +1,17 @@
 import {ref} from "vue";
 import type {GridData} from "../types/grid.type";
-import testUserDate from "@/configs/userData.config";
-import axios from "axios";
+import {useApiStore} from "../useApi";
 
 export const gridData = ref<GridData>()
 
 export const useUploadImage = async (
   formData: FormData
 ) => {
-    const apiUrl = 'http://backend.tgfolio.tg.localhost:81/api/v1/common/upload-image';
-
-    axios.postForm(apiUrl, formData, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + testUserDate
-        },
-      })
+    useApiStore().postForm('api/v1/common/upload-image', formData)
       .then((response) => {
-        return response.data.data.node
+        return response.data.node
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
       });
-
 }
-
