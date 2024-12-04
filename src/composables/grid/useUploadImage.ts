@@ -1,6 +1,6 @@
 import {ref} from "vue";
 import type {GridData} from "../types/grid.type";
-import {useApiStore} from "../useApi";
+import {useApiStore} from "../useApiStore";
 
 export const gridData = ref<GridData>()
 
