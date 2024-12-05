@@ -12,7 +12,7 @@ export const useHandleUploadImage = async (
     const allowedFormats = ['image/png', 'image/jpeg', 'image/gif']
     if (allowedFormats.includes(file.type)) {
       // Проверка размера файла
-      if (file.size <= 2048 * 1024) {
+      if (file.size <= 20480 * 1024) {
         const formData = new FormData()
         formData.append('picture', file)
 
