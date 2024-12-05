@@ -14,7 +14,7 @@ const loading = ref(true)
 onMounted(() => {
   useAuth().then(() => {
     loading.value = false
-    // displayName.value = useUserStore().authUser?.display_name
+    displayName.value = useUserStore().authUser?.display_name
     biography.value = useUserStore().authUser?.biography
   })
 })

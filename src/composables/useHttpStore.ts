@@ -20,7 +20,7 @@ export const useHttpStore = defineStore('useHttpStore', () => {
       headers: {
         Accept: 'application/json',
         'Content-type': 'application/json',
-        Authorization: 'Bearer ' + initDataState.value,
+        Authorization: 'Bearer ' + btoa(initDataState.value as string),
       },
     }),
   )

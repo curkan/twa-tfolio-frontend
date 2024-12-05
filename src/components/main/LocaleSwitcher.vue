@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import i18n from '@/i18n'
 import { onMounted, ref } from 'vue'
 
