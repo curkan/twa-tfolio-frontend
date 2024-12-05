@@ -1,6 +1,5 @@
 import { showFailToast, showLoadingToast } from 'vant'
-import axios from 'axios'
-import testUserDate from '@/configs/userData.config'
+import {useApiStore} from '../useApiStore'
 
 export const useHandleUploadImage = async (
   event: Event,
@@ -23,15 +22,8 @@ export const useHandleUploadImage = async (
           loadingType: 'spinner',
         })
 
-        const apiUrl = 'http://backend.tgfolio.tg.localhost:81/api/v1/common/upload-image'
-
-        axios
-          .postForm(apiUrl, formData, {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: 'Bearer ' + testUserDate,
-            },
-          })
+        useApiStore()
+          .postForm('api/v1/common/upload-image', formData)
           .then((response) => {
             callback(...args, response.data.data)
           })
