@@ -1,5 +1,5 @@
 import { showFailToast, showLoadingToast } from 'vant'
-import {useApiStore} from '../useApiStore'
+import { useApiStore } from '../useApiStore'
 
 export const useHandleUploadImage = async (
   event: Event,
