@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import Grid from './components/Grid.vue'
 import UserHeader from './components/UserHeader.vue'
 import { useWebAppMainButton } from 'vue-tg'
+import UploadFiles from './components/UploadFiles.vue'
 
 useWebAppMainButton().setMainButtonParams({
   color: '#2C2C2C',
@@ -12,6 +13,7 @@ useWebAppMainButton().setMainButtonParams({
 
 <template>
   <van-config-provider theme="dark" />
+  <UploadFiles />
   <UserHeader />
   <Grid />
 </template>

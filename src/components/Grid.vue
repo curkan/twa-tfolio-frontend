@@ -19,6 +19,7 @@ import { useAuth } from '@/composables/auth/auth'
 import type { Node } from '@/composables/types/grid.type'
 import { gridData, useGetGridData } from '@/composables/grid/useGetGridData'
 import { useUpdateGrid } from '@/composables/grid/useUpdateGrid'
+import { useUploadFiles } from '@/composables/handles/useUploadFiles'
 
 const fileInput = ref<HTMLInputElement>()
 const nodes = ref<Node[]>()
@@ -43,12 +44,15 @@ if (window.Telegram.WebApp.isVersionAtLeast('8.0')) {
 onMounted(async () => {
   await useGetGridData()
 
+  if (fileInput.value !== null) useUploadFiles(fileInput.value, [], addNewWidget)
+
   watch(
     () => gridData.value,
     () => {
       grid?.removeAll()
 
       nodes.value = gridData.value?.grid
+      console.log(gridData.value?.grid)
       nodes.value?.forEach((node: Node) => {
         node.internalId = node.id
         node.id = 'w_' + node.sort
@@ -110,7 +114,7 @@ const removeVisibleIcon = () => {
   })
 }
 
-const onChange = (event: Event, changeItems: any) => {
+const onChange = async (event: Event, changeItems: any) => {
   if (gridFirstLoaded.value === false) return
 
   changeItems.forEach((item: any) => {
@@ -137,7 +141,7 @@ const onChange = (event: Event, changeItems: any) => {
     }
   })
 
-  useUpdateGrid(newData)
+  await useUpdateGrid(newData)
 }
 
 const handleTouch = (e: Event) => {
