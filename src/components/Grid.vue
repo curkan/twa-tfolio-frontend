@@ -55,7 +55,7 @@ if (window.Telegram.WebApp.isVersionAtLeast('8.0')) {
 const onSelect = (option) => {
   if (option.name == i18n.global.t('share.link')) {
     const url = window.location.origin + window.location.pathname
-    navigator.clipboard.writeText(url + '?id=' + useWebApp().initDataUnsafe.user.id)
+    navigator.clipboard.writeText(import.meta.env.VITE_BACKEND_URL + '?startapp=' + useWebApp().initDataUnsafe.user.id)
   }
 
   showToast(i18n.global.t('main.copied'));
