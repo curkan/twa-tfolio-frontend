@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import i18n from '@/i18n'
-import {showToast} from 'vant';
+import { showToast } from 'vant'
 import { onMounted, ref } from 'vue'
 
 const showPopover = ref(false)

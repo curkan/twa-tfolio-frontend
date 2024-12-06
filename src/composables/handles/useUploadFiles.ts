@@ -1,8 +1,6 @@
 import { useUserData } from '@/configs/userData.config'
-import i18n from '@/i18n'
 import Dropzone from 'dropzone'
-import heic2any from 'heic2any'
-import {showLoadingToast, showToast} from 'vant'
+import { showToast } from 'vant'
 import { ref } from 'vue'
 export const uploadFiles = ref<Dropzone.DropzoneFile[]>([])
 
@@ -27,31 +25,11 @@ export function useUploadFiles(
     } as Dropzone.DropzoneOptions,
   )
   myDropzone.on('thumbnail', function (file: Dropzone.DropzoneFile, dataURL) {
-    if (!file.name.match(/\.heic$/i)) {
-      uploadFiles.value.push(file)
+    if (file.name.match(/\.heic$/i)) {
+      file.dataURL = '/images/heic.svg'
     }
-  })
-  myDropzone.on('addedfile', (file: Dropzone.DropzoneFile) => {
-      if (file.name.match(/\.heic$/i)) {
-        showLoadingToast({
-          message: i18n.global.t('main.prepareImage'),
-          forbidClick: true,
-        });
-        heic2any({
-            blob: file,
-            toType: "image/jpeg",
-        }).then(function(convertedBlob) {
-            var newFile = new File([convertedBlob], file.name.replace(".heic", ".jpg"), { type: "image/jpeg" });
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                file.dataURL = e.target.result;
-                uploadFiles.value.push(file)
-            };
-            reader.readAsDataURL(newFile);
-        }).catch(function(err) {
-            console.error('Error converting HEIC:', err);
-        });
-    }
+
+    uploadFiles.value.push(file)
   })
   myDropzone.on('success', (file: Dropzone.DropzoneFile, _response) => {
     uploadFiles.value = uploadFiles.value?.filter(
