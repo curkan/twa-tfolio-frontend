@@ -12,6 +12,7 @@
   z-index: 10;
   margin-left: -1em;
   margin-top: -1em;
+  margin-top: calc(-1em - (var(--tg-safe-area-inset-top, 0px) + var(--tg-content-safe-area-inset-top, 0px)));
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   img {
