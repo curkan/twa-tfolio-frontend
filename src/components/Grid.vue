@@ -6,24 +6,37 @@ import {
   type GridStackNode,
   type GridStackWidget,
 } from 'gridstack'
+
+import type {
+  ShareSheetProps,
+  ShareSheetOption,
+  ShareSheetOptions,
+} from 'vant';
+
 import { ref, onMounted, nextTick, reactive, watch } from 'vue'
 import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
-import { useWebAppHapticFeedback } from 'vue-tg'
+import { useWebApp, useWebAppClipboard, useWebAppHapticFeedback, useWebAppMainButton } from 'vue-tg'
 import IconPlus from './icons/IconPlus.vue'
 import IconRemove from './icons/IconRemove.vue'
-import { showImagePreview, showLoadingToast } from 'vant'
+import { showImagePreview, showLoadingToast, showToast } from 'vant'
 import { useHandleDoubleTap } from '@/composables/handles/useHandleDoubleTap'
 import { useHandleUploadImage } from '@/composables/handles/useHandleUploadImage'
-import { useAuth } from '@/composables/auth/auth'
 import type { Node } from '@/composables/types/grid.type'
 import { gridData, useGetGridData } from '@/composables/grid/useGetGridData'
 import { useUpdateGrid } from '@/composables/grid/useUpdateGrid'
 import { useUploadFiles } from '@/composables/handles/useUploadFiles'
+import i18n from '@/i18n';
 
 const fileInput = ref<HTMLInputElement>()
 const nodes = ref<Node[]>()
 const gridFirstLoaded = ref<boolean>(false)
+const options = [
+  { name: i18n.global.t('share.link'), icon: 'link' },
+];
+
+const showShare = ref(false);
+const { onMainButtonClicked } = useWebAppMainButton();
 
 // DO NOT use ref(null) as proxies GS will break all logic when comparing structures... see https://github.com/gridstack/gridstack.js/issues/2115
 let grid: GridStack | null = null
@@ -40,6 +53,22 @@ window.Telegram.WebApp.expand()
 if (window.Telegram.WebApp.isVersionAtLeast('8.0')) {
   window.Telegram.WebApp.requestFullscreen()
 }
+
+const onSelect = (option) => {
+  if (option.name == i18n.global.t('share.link')) {
+    const url = window.location.origin + window.location.pathname
+    navigator.clipboard.writeText(url + '?id=' + useWebApp().initDataUnsafe.user.id)
+  }
+
+  showToast(i18n.global.t('main.copied'));
+  showShare.value = false;
+};
+
+useWebAppMainButton().setMainButtonText(i18n.global.t('tg.share'))
+useWebAppMainButton().showMainButton()
+onMainButtonClicked(() => {
+  showShare.value = !showShare.value
+})
 
 onMounted(async () => {
   await useGetGridData()
@@ -222,10 +251,17 @@ const remove = (widget: GridStackWidget) => {
   </div>
   <div v-if="gridFirstLoaded == true && items.length == 0" class="empty-grid">
     <div class="center">
-      <div class="header">Это ваше портфолио</div>
-      <div class="text">Вы можете загрузить изображения, разместить их так, как вам понравится и потом поделиться с потенциальными клиентами.</div>
+      <div class="header">{{$t('portfolio.header')}}</div>
+      <div class="text">{{$t('portfolio.text')}}</div>
     </div>
   </div>
+  <van-share-sheet
+    v-model:show="showShare"
+    :title="$t('tg.share')"
+    :cancel-text="$t('main.cancel')"
+    :options="options"
+    @select="onSelect"
+  />
 </template>
 
 <style scoped lang="scss">

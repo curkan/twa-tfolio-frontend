@@ -2,6 +2,7 @@
 import i18n from '@/i18n'
 import { showToast } from 'vant'
 import { onMounted, ref } from 'vue'
+import {useWebAppMainButton} from 'vue-tg';
 
 const showPopover = ref(false)
 const actions = i18n.global.availableLocales.map((locale) => ({ text: locale }))
@@ -10,6 +11,7 @@ const onSelect = (action) => {
   showToast(action.text)
   i18n.global.locale.value = action.text
   localStorage.setItem('lang', action.text)
+  useWebAppMainButton().setMainButtonText(i18n.global.t('tg.share'))
 }
 console.log(i18n.global.availableLocales)
 </script>
