@@ -27,6 +27,7 @@ import { gridData, useGetGridData } from '@/composables/grid/useGetGridData'
 import { useUpdateGrid } from '@/composables/grid/useUpdateGrid'
 import { useUploadFiles } from '@/composables/handles/useUploadFiles'
 import i18n from '@/i18n';
+import {showShare, useShare} from '@/composables/mainButton/useShare';
 
 const fileInput = ref<HTMLInputElement>()
 const nodes = ref<Node[]>()
@@ -34,9 +35,6 @@ const gridFirstLoaded = ref<boolean>(false)
 const options = [
   { name: i18n.global.t('share.link'), icon: 'link' },
 ];
-
-const showShare = ref(false);
-const { onMainButtonClicked } = useWebAppMainButton();
 
 // DO NOT use ref(null) as proxies GS will break all logic when comparing structures... see https://github.com/gridstack/gridstack.js/issues/2115
 let grid: GridStack | null = null
@@ -64,11 +62,7 @@ const onSelect = (option) => {
   showShare.value = false;
 };
 
-useWebAppMainButton().setMainButtonText(i18n.global.t('tg.share'))
-useWebAppMainButton().showMainButton()
-onMainButtonClicked(() => {
-  showShare.value = !showShare.value
-})
+useShare()
 
 onMounted(async () => {
   await useGetGridData()

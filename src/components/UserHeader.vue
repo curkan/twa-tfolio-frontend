@@ -2,10 +2,12 @@
 import { useAuth } from '@/composables/auth/auth'
 import { useUserStore } from '@/composables/stores/useUserStore'
 import { useUpdateUser } from '@/composables/user/useUpdateUser'
-import { showSuccessToast } from 'vant'
+import { showSuccessToast, showToast } from 'vant'
 import { onMounted, ref, watch } from 'vue'
-import { useWebAppHapticFeedback } from 'vue-tg'
+import { useWebAppHapticFeedback, useWebAppMainButton } from 'vue-tg'
 import LocaleSwitcher from './main/LocaleSwitcher.vue'
+import {useSave} from '@/composables/mainButton/useSave'
+import {useChangeShowShare, useShare} from '@/composables/mainButton/useShare'
 const showEditProfile = ref(false)
 const displayName = ref()
 const biography = ref()
@@ -19,7 +21,24 @@ onMounted(() => {
   })
 })
 
+watch(
+  () => showEditProfile.value,
+  () => {
+    if (showEditProfile.value === true) {
+      Telegram.WebApp.offEvent('mainButtonClicked', useChangeShowShare)
+      useSave(saveUserProfile)
+    } else {
+      useShare()
+    }
+  },
+)
+
+const showEditProfileHandle = () => {
+  showEditProfile.value = !showEditProfile.value
+}
+
 const saveUserProfile = () => {
+  Telegram.WebApp.offEvent('mainButtonClicked', saveUserProfile)
   showEditProfile.value = false
   useUpdateUser(displayName.value, biography.value).then((response) => {
     useWebAppHapticFeedback().notificationOccurred('success')
@@ -40,7 +59,7 @@ const saveUserProfile = () => {
       />
       <van-skeleton-image v-else />
     </div>
-    <div class="info" @click="showEditProfile = !showEditProfile">
+    <div class="info" @click="showEditProfileHandle">
       <div v-if="loading">
         <van-skeleton title :row="1" />
       </div>
@@ -79,11 +98,11 @@ const saveUserProfile = () => {
         />
       </van-cell-group>
     </div>
-    <div class="button">
-      <van-button type="primary" size="large" @click="saveUserProfile">{{
-        $t('main.save')
-      }}</van-button>
-    </div>
+    <!-- <div class="button"> -->
+    <!--   <van-button type="primary" size="large" @click="saveUserProfile">{{ -->
+    <!--     $t('main.save') -->
+    <!--   }}</van-button> -->
+    <!-- </div> -->
   </van-popup>
 </template>
 

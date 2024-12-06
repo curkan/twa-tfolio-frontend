@@ -9,7 +9,8 @@
     "link": "Link"
   },
   "tg": {
-    "share": "Share"
+    "share": "Share",
+    "save": "Save"
   },
   "portfolio": {
     "header": "This is your portfolio",
