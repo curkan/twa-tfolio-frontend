@@ -195,6 +195,7 @@ const remove = (widget: GridStackWidget) => {
 
   <div class="grid-stack">
     <div
+      v-if="items.length > 0"
       v-for="(w, index) in items"
       @click="handleTouch"
       @touchstart="handleTouch"
@@ -217,6 +218,12 @@ const remove = (widget: GridStackWidget) => {
         </div>
         <button v-if="visibleRemove" class="ui-remove" @click="remove(w)"><IconRemove /></button>
       </div>
+    </div>
+  </div>
+  <div v-if="gridFirstLoaded == true && items.length == 0" class="empty-grid">
+    <div class="center">
+      <div class="header">Это ваше портфолио</div>
+      <div class="text">Вы можете загрузить изображения, разместить их так, как вам понравится и потом поделиться с потенциальными клиентами.</div>
     </div>
   </div>
 </template>
