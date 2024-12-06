@@ -11,7 +11,6 @@ export const useShare = () => {
   Telegram.WebApp.onEvent('mainButtonClicked', useChangeShowShare)
 }
 
-
 export const useChangeShowShare = () => {
   showShare.value = !showShare.value
 }

@@ -28,6 +28,7 @@ watch(
       Telegram.WebApp.offEvent('mainButtonClicked', useChangeShowShare)
       useSave(saveUserProfile)
     } else {
+      Telegram.WebApp.offEvent('mainButtonClicked', saveUserProfile)
       useShare()
     }
   },
