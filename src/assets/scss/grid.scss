@@ -63,12 +63,15 @@
 .grid-stack-item {
   transition: all 0.2s;
 }
-.ui-draggable-disabled:not(.ui-draggable-dragging) {
-  opacity: 0.4;
-}
 
-.grid-stack:has(.ui-resizable-resizing) :not(.ui-resizable-resizing) {
-  opacity: 0.4;
+.grid-stack:not(.grid-stack-static) {
+  .ui-draggable-disabled:not(.ui-draggable-dragging) {
+    opacity: 0.4;
+  }
+
+  &:has(.ui-resizable-resizing) :not(.ui-resizable-resizing) {
+    opacity: 0.4;
+  }
 }
 
 .ui-draggable-dragging > .grid-stack-item-content {

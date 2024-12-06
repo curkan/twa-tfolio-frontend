@@ -13,7 +13,6 @@ const onSelect = (action) => {
   localStorage.setItem('lang', action.text)
   useWebAppMainButton().setMainButtonText(i18n.global.t('tg.share'))
 }
-console.log(i18n.global.availableLocales)
 </script>
 
 <template>

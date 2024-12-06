@@ -5,7 +5,7 @@ import { useUpdateUser } from '@/composables/user/useUpdateUser'
 import { showSuccessToast, showToast } from 'vant'
 import { onMounted, ref, watch } from 'vue'
 import { useWebAppHapticFeedback, useWebAppMainButton } from 'vue-tg'
-import LocaleSwitcher from './main/LocaleSwitcher.vue'
+import LocaleSwitcher from './../main/LocaleSwitcher.vue'
 import {useSave} from '@/composables/mainButton/useSave'
 import {useChangeShowShare, useShare} from '@/composables/mainButton/useShare'
 const showEditProfile = ref(false)
