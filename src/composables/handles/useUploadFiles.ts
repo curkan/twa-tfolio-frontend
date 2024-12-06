@@ -1,5 +1,6 @@
 import { useUserData } from '@/configs/userData.config'
 import Dropzone from 'dropzone'
+import {showToast} from 'vant'
 import { ref } from 'vue'
 export const uploadFiles = ref<Dropzone.DropzoneFile[]>([])
 
@@ -36,5 +37,13 @@ export function useUploadFiles(
   })
   myDropzone.on('uploadprogress', (file, progress) => {
     console.log(progress)
+  })
+
+  myDropzone.on('error', (file: Dropzone.DropzoneFile, message: string | Error) => {
+    console.log(message)
+    uploadFiles.value = uploadFiles.value?.filter(
+      (item: Dropzone.DropzoneFile) => item.upload?.uuid !== file.upload?.uuid,
+    )
+    showToast(message)
   })
 }
