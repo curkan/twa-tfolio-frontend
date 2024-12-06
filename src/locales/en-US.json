@@ -1,7 +1,19 @@
 {
   "main": {
     "save": "Save",
-    "prepareImage": "Prepare image..."
+    "prepareImage": "Prepare image...",
+    "copied": "Copied",
+    "cancel": "Cancel"
+  },
+  "share": {
+    "link": "Link"
+  },
+  "tg": {
+    "share": "Share"
+  },
+  "portfolio": {
+    "header": "This is your portfolio",
+    "text": "You can upload images, arrange them as you like and then share them with potential clients."
   },
   "userDisplayName": "Display name",
   "userBiography": "About you"
