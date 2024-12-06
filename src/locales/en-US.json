@@ -1,6 +1,7 @@
 {
   "main": {
-    "save": "Save"
+    "save": "Save",
+    "prepareImage": "Prepare image..."
   },
   "userDisplayName": "Display name",
   "userBiography": "About you"

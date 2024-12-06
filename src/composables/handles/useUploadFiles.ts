@@ -1,6 +1,8 @@
 import { useUserData } from '@/configs/userData.config'
+import i18n from '@/i18n'
 import Dropzone from 'dropzone'
-import {showToast} from 'vant'
+import heic2any from 'heic2any'
+import {showLoadingToast, showToast} from 'vant'
 import { ref } from 'vue'
 export const uploadFiles = ref<Dropzone.DropzoneFile[]>([])
 
@@ -25,10 +27,32 @@ export function useUploadFiles(
     } as Dropzone.DropzoneOptions,
   )
   myDropzone.on('thumbnail', function (file: Dropzone.DropzoneFile, dataURL) {
-    console.log(file)
-    uploadFiles.value.push(file)
+    if (!file.name.match(/\.heic$/i)) {
+      uploadFiles.value.push(file)
+    }
   })
-  myDropzone.on('addedfile', (file: Dropzone.DropzoneFile) => {})
+  myDropzone.on('addedfile', (file: Dropzone.DropzoneFile) => {
+      if (file.name.match(/\.heic$/i)) {
+        showLoadingToast({
+          message: i18n.global.t('main.prepareImage'),
+          forbidClick: true,
+        });
+        heic2any({
+            blob: file,
+            toType: "image/jpeg",
+        }).then(function(convertedBlob) {
+            var newFile = new File([convertedBlob], file.name.replace(".heic", ".jpg"), { type: "image/jpeg" });
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                file.dataURL = e.target.result;
+                uploadFiles.value.push(file)
+            };
+            reader.readAsDataURL(newFile);
+        }).catch(function(err) {
+            console.error('Error converting HEIC:', err);
+        });
+    }
+  })
   myDropzone.on('success', (file: Dropzone.DropzoneFile, _response) => {
     uploadFiles.value = uploadFiles.value?.filter(
       (item: Dropzone.DropzoneFile) => item.upload?.uuid !== file.upload?.uuid,
@@ -36,11 +60,10 @@ export function useUploadFiles(
     callback(...args, _response.data)
   })
   myDropzone.on('uploadprogress', (file, progress) => {
-    console.log(progress)
+    // console.log(progress)
   })
 
   myDropzone.on('error', (file: Dropzone.DropzoneFile, message: string | Error) => {
-    console.log(message)
     uploadFiles.value = uploadFiles.value?.filter(
       (item: Dropzone.DropzoneFile) => item.upload?.uuid !== file.upload?.uuid,
     )
