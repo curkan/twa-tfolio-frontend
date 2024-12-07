@@ -14,6 +14,7 @@ import { useHandleDoubleTap } from '@/composables/handles/useHandleDoubleTap'
 import { gridData, useGetGridData } from '@/composables/grid/useGetGridData'
 import type {Node} from '@/composables/types/grid.type'
 import {useMainPortfolio} from '@/composables/mainButton/useMainPortfolio'
+const gridFirstLoaded = ref<boolean>(false)
 const nodes = ref<Node[]>()
 
 const props = defineProps({
@@ -48,6 +49,10 @@ onMounted(async () => {
       nextTick(() => {
         grid?.makeWidget(node.id as GridStackElement)
       })
+    })
+
+    nextTick(() => {
+      gridFirstLoaded.value = true
     })
   })
 })
@@ -85,16 +90,15 @@ const openImagePreview = (link: string, startPosition: number) => {
             @click="useHandleDoubleTap(index, [w.image.sm, index], openImagePreview)"
           />
         </div>
-        <button v-if="visibleRemove" class="ui-remove" @click="remove(w)"><IconRemove /></button>
       </div>
     </div>
   </div>
-  <!-- <div v-if="gridFirstLoaded == true && items.length == 0" class="empty-grid"> -->
-  <!--   <div class="center"> -->
-  <!--     <div class="header">{{$t('portfolio.header')}}</div> -->
-  <!--     <div class="text">{{$t('portfolio.text')}}</div> -->
-  <!--   </div> -->
-  <!-- </div> -->
+  <div v-if="gridFirstLoaded == true && items.length == 0" class="empty-grid">
+    <div class="center">
+      <div class="header">{{$t('consumerPortfolio.header')}}</div>
+      <div class="text">{{$t('consumerPortfolio.text')}}</div>
+    </div>
+  </div>
 </template>
 
 <style scoped lang="scss">
