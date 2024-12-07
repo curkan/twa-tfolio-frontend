@@ -28,6 +28,7 @@ import { useUpdateGrid } from '@/composables/grid/useUpdateGrid'
 import { useUploadFiles } from '@/composables/handles/useUploadFiles'
 import i18n from '@/i18n';
 import {showShare, useOffShareEvent, useShare} from '@/composables/mainButton/useShare';
+import {useMakeSizeImage} from '@/composables/grid/useMakeSizeImage';
 
 const fileInput = ref<HTMLInputElement>()
 const nodes = ref<Node[]>()
@@ -126,24 +127,6 @@ onMounted(async () => {
     useWebAppHapticFeedback().selectionChanged()
   })
 })
-
-const makeSize = (w: Node) => {
-  if (w.w === 1) {
-    return w.image.xs
-  }
-
-  if (w.w === 2) {
-    return w.image.sm
-  }
-
-  if (w.w === 3) {
-    return w.image.md
-  }
-
-  if (w.w === 4) {
-    return w.image.original
-  }
-}
 
 
 const openImagePreview = (link: string, startPosition: number) => {
@@ -265,7 +248,7 @@ const remove = (widget: GridStackWidget) => {
       <div class="grid-stack-item-content">
         <div class="img">
           <img
-            v-lazy="{ src: makeSize(w), delay: 300 }"
+            v-lazy="{ src: useMakeSizeImage(w), delay: 300 }"
             @click="useHandleDoubleTap(index, [w.image.original, index], openImagePreview)"
           />
         </div>

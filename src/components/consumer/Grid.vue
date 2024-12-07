@@ -14,6 +14,7 @@ import { useHandleDoubleTap } from '@/composables/handles/useHandleDoubleTap'
 import { gridData, useGetGridData } from '@/composables/grid/useGetGridData'
 import type {Node} from '@/composables/types/grid.type'
 import {useMainPortfolio} from '@/composables/mainButton/useMainPortfolio'
+import {useMakeSizeImage} from '@/composables/grid/useMakeSizeImage'
 const gridFirstLoaded = ref<boolean>(false)
 const nodes = ref<Node[]>()
 
@@ -66,24 +67,6 @@ const openImagePreview = (link: string, startPosition: number) => {
   })
 }
 
-const makeSize = (w: Node) => {
-  if (w.w === 1) {
-    return w.image.xs
-  }
-
-  if (w.w === 2) {
-    return w.image.sm
-  }
-
-  if (w.w === 3) {
-    return w.image.md
-  }
-
-  if (w.w === 4) {
-    return w.image.original
-  }
-}
-
 </script>
 
 <template>
@@ -104,7 +87,7 @@ const makeSize = (w: Node) => {
       <div class="grid-stack-item-content">
         <div class="img">
           <img
-            v-lazy="{ src: makeSize(w), delay: 300 }"
+            v-lazy="{ src: useMakeSizeImage(w), delay: 300 }"
             @click="useHandleDoubleTap(index, [w.image.original, index], openImagePreview)"
           />
         </div>
