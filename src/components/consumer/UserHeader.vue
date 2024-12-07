@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { useAuth } from '@/composables/auth/auth'
-import { useUserStore } from '@/composables/stores/useUserStore'
 import { onMounted, ref, watch } from 'vue'
 import LocaleSwitcher from './../main/LocaleSwitcher.vue'
 import type {IUser} from '@/composables/types/user.type';
