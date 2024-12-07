@@ -10,7 +10,8 @@
   },
   "tg": {
     "share": "Share",
-    "save": "Save"
+    "save": "Save",
+    "mainPortfolio": "Your portfolio"
   },
   "portfolio": {
     "header": "This is your portfolio",

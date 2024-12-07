@@ -5,7 +5,7 @@ import {
   type GridStackWidget,
 } from 'gridstack'
 
-import { ref, onMounted, nextTick, watch } from 'vue'
+import { ref, onMounted, nextTick, watch, onUnmounted } from 'vue'
 import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
 import IconRemove from './../icons/IconRemove.vue'
@@ -13,6 +13,7 @@ import { showImagePreview } from 'vant'
 import { useHandleDoubleTap } from '@/composables/handles/useHandleDoubleTap'
 import { gridData, useGetGridData } from '@/composables/grid/useGetGridData'
 import type {Node} from '@/composables/types/grid.type'
+import {useMainPortfolio} from '@/composables/mainButton/useMainPortfolio'
 const nodes = ref<Node[]>()
 
 const props = defineProps({
@@ -25,31 +26,29 @@ let grid: GridStack | null = null
 let items = ref<GridStackWidget[]>([])
 const visibleRemove = ref(false)
 
+useMainPortfolio()
+
+onUnmounted(() => {
+  gridData.value = undefined
+})
+
 onMounted(async () => {
-  await useGetGridData(props.userId)
-
-  watch(
-    () => gridData.value,
-    () => {
-      grid?.removeAll()
-
-      nodes.value = gridData.value?.grid
-      nodes.value?.forEach((node: Node) => {
-        node.internalId = node.id
-        node.id = 'w_' + node.sort
-        items.value.push(node as GridStackWidget)
-
-        nextTick(() => {
-          grid?.makeWidget(node.id as GridStackElement)
-        })
-      })
-    },
-  )
-
   grid = GridStack.init({
     float: false,
     staticGrid: true,
     column: 4,
+  })
+  await useGetGridData(props.userId).then(() => {
+    nodes.value = gridData.value?.grid
+    nodes.value?.forEach((node: Node) => {
+      node.internalId = node.id
+      node.id = 'w_' + node.sort
+      items.value.push(node as GridStackWidget)
+
+      nextTick(() => {
+        grid?.makeWidget(node.id as GridStackElement)
+      })
+    })
   })
 })
 

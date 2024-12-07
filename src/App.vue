@@ -3,18 +3,36 @@ import { useWebApp, useWebAppMainButton } from 'vue-tg'
 import UploadFiles from './components/author/UploadFiles.vue';
 import UserHeader from './components/author/UserHeader.vue';
 import UserHeaderConsumer from './components/consumer/UserHeader.vue';
-import {onMounted, ref, shallowRef} from 'vue';
+import {onMounted, ref, shallowRef, watch} from 'vue';
 
 import Grid from './components/author/Grid.vue';
 import GridConsumer from './components/consumer/Grid.vue';
+import {useAppStore} from './stores/mainButtonStore';
 const currentComponentGrid = shallowRef()
 const currentComponentHeader = shallowRef()
 
+watch(
+  () => useAppStore().currentMode,
+  () => {
+
+    if (useAppStore().currentMode == 'author') {
+      currentComponentGrid.value = Grid
+      currentComponentHeader.value = UserHeader
+    }
+
+    if (useAppStore().currentMode == 'cosnumer') {
+      currentComponentGrid.value = GridConsumer
+      currentComponentHeader.value = UserHeaderConsumer
+    }
+  },
+)
 onMounted(() => {
   if (useWebApp().initDataUnsafe.start_param) {
+    useAppStore().currentMode = 'consumer'
     currentComponentGrid.value = GridConsumer
     currentComponentHeader.value = UserHeaderConsumer
   } else {
+    useAppStore().currentMode = 'author'
     currentComponentGrid.value = Grid
     currentComponentHeader.value = UserHeader
   }

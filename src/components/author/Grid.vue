@@ -13,7 +13,7 @@ import type {
   ShareSheetOptions,
 } from 'vant';
 
-import { ref, onMounted, nextTick, reactive, watch } from 'vue'
+import { ref, onMounted, nextTick, reactive, watch, onUnmounted } from 'vue'
 import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
 import { useWebApp, useWebAppClipboard, useWebAppHapticFeedback, useWebAppMainButton } from 'vue-tg'
@@ -27,7 +27,7 @@ import { gridData, useGetGridData } from '@/composables/grid/useGetGridData'
 import { useUpdateGrid } from '@/composables/grid/useUpdateGrid'
 import { useUploadFiles } from '@/composables/handles/useUploadFiles'
 import i18n from '@/i18n';
-import {showShare, useShare} from '@/composables/mainButton/useShare';
+import {showShare, useOffShareEvent, useShare} from '@/composables/mainButton/useShare';
 
 const fileInput = ref<HTMLInputElement>()
 const nodes = ref<Node[]>()
@@ -52,10 +52,33 @@ const onSelect = (option) => {
   showShare.value = false;
 };
 
-useShare()
+onUnmounted(() => {
+  useOffShareEvent()
+})
 
 onMounted(async () => {
-  await useGetGridData()
+  useShare()
+  grid = GridStack.init({
+    float: false,
+    column: 4,
+  })
+  await useGetGridData().then(() => {
+
+    nodes.value = gridData.value?.grid
+    nodes.value?.forEach((node: Node) => {
+      node.internalId = node.id
+      node.id = 'w_' + node.sort
+      items.value.push(node as GridStackWidget)
+
+      nextTick(() => {
+        grid?.makeWidget(node.id as GridStackElement)
+      })
+    })
+
+    nextTick(() => {
+      gridFirstLoaded.value = true
+    })
+  })
 
   if (fileInput.value !== null) useUploadFiles(fileInput.value, [], addNewWidget)
 
@@ -80,11 +103,6 @@ onMounted(async () => {
       })
     },
   )
-
-  grid = GridStack.init({
-    float: false,
-    column: 4,
-  })
 
   grid.on('change', onChange)
   grid.on('removed', onChange)
@@ -129,6 +147,8 @@ const removeVisibleIcon = () => {
 const onChange = async (event: Event, changeItems: any) => {
   if (gridFirstLoaded.value === false) return
 
+  console.log('onChange auth')
+
   changeItems.forEach((item: any) => {
     const widget = items.value.find((w: GridStackWidget) => w.id === item.id)
 
@@ -152,6 +172,8 @@ const onChange = async (event: Event, changeItems: any) => {
       h: el.getAttribute('gs-h') ?? 1,
     }
   })
+
+  console.log(newData)
 
   await useUpdateGrid(newData)
 }

@@ -7,13 +7,12 @@ export const gridData = ref<GridData>()
 export const useGetGridData = async (
   userId?: Number
 ) => {
-  console.log(userId)
   let query = ''
   if (userId !== undefined) {
     query = '?user_id=' + userId
   }
 
-  useApiStore()
+  return useApiStore()
     .get('api/v1/common/grid' + query)
     .then((response) => {
       gridData.value = response.data
