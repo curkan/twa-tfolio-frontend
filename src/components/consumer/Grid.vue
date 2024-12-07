@@ -66,6 +66,24 @@ const openImagePreview = (link: string, startPosition: number) => {
   })
 }
 
+const makeSize = (w: Node) => {
+  if (w.w === 1) {
+    return w.image.xs
+  }
+
+  if (w.w === 2) {
+    return w.image.sm
+  }
+
+  if (w.w === 3) {
+    return w.image.md
+  }
+
+  if (w.w === 4) {
+    return w.image.original
+  }
+}
+
 </script>
 
 <template>
@@ -86,8 +104,8 @@ const openImagePreview = (link: string, startPosition: number) => {
       <div class="grid-stack-item-content">
         <div class="img">
           <img
-            v-lazy="{ src: w?.image?.sm, delay: 300 }"
-            @click="useHandleDoubleTap(index, [w.image.sm, index], openImagePreview)"
+            v-lazy="{ src: makeSize(w), delay: 300 }"
+            @click="useHandleDoubleTap(index, [w.image.original, index], openImagePreview)"
           />
         </div>
       </div>
