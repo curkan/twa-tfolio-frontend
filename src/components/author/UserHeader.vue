@@ -13,12 +13,18 @@ const displayName = ref()
 const biography = ref()
 const loading = ref(true)
 
-onMounted(() => {
-  useAuth().then(() => {
+onMounted(async () => {
+  if (useUserStore().authUser) {
     loading.value = false
     displayName.value = useUserStore().authUser?.display_name
     biography.value = useUserStore().authUser?.biography
-  })
+  } else {
+    await useAuth().then(() => {
+      loading.value = false
+      displayName.value = useUserStore().authUser?.display_name
+      biography.value = useUserStore().authUser?.biography
+    })
+  }
 })
 
 watch(
@@ -65,9 +71,21 @@ const saveUserProfile = () => {
         <van-skeleton title :row="1" />
       </div>
       <div class="username" v-if="!loading">
-        {{ useUserStore().authUser?.display_name }}
+        <span v-if="useUserStore().authUser?.display_name">
+          {{ useUserStore().authUser?.display_name }}
+        </span>
+        <span v-else class="notSet">
+          {{$t('main.displayNameNotFound')}}
+        </span>
       </div>
-      <div class="biography">{{ useUserStore().authUser?.biography }}</div>
+      <div class="biography" v-if="!loading">
+        <span v-if="useUserStore().authUser?.biography">
+          {{ useUserStore().authUser?.biography }}
+        </span>
+        <span v-else class="notSet">
+          {{$t('main.biographyNotFound')}}
+        </span>
+      </div>
     </div>
   </div>
   <van-popup

@@ -8,6 +8,7 @@ import {onMounted, ref, shallowRef, watch} from 'vue';
 import Grid from './components/author/Grid.vue';
 import GridConsumer from './components/consumer/Grid.vue';
 import {useAppStore} from './stores/mainButtonStore';
+import {useAuth} from './composables/auth/auth';
 const currentComponentGrid = shallowRef()
 const currentComponentHeader = shallowRef()
 
@@ -26,7 +27,10 @@ watch(
     }
   },
 )
-onMounted(() => {
+
+onMounted(async () => {
+  await useAuth()
+
   if (useWebApp().initDataUnsafe.start_param) {
     useAppStore().currentMode = 'consumer'
     currentComponentGrid.value = GridConsumer

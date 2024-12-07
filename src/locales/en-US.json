@@ -3,7 +3,9 @@
     "save": "Save",
     "prepareImage": "Prepare image...",
     "copied": "Copied",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "displayNameNotFound": "Name is not set",
+    "biographyNotFound": "Biography is not set"
   },
   "share": {
     "link": "Link"

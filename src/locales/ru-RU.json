@@ -3,7 +3,9 @@
     "save": "Сохранить",
     "prepareImage": "Преобразуем изображения...",
     "copied": "Скопировано",
-    "cancel": "Отменить"
+    "cancel": "Отменить",
+    "displayNameNotFound": "Имя не задано",
+    "biographyNotFound": "Биография не задана"
   },
   "share": {
     "link": "Ссылка"
