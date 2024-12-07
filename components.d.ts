@@ -7,7 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    Grid: typeof import('./src/components/Grid.vue')['default']
+    Grid: typeof import('./src/components/author/Grid.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
     IconDocumentation: typeof import('./src/components/icons/IconDocumentation.vue')['default']
     IconEcosystem: typeof import('./src/components/icons/IconEcosystem.vue')['default']
@@ -18,8 +18,8 @@ declare module 'vue' {
     LocaleSwitcher: typeof import('./src/components/main/LocaleSwitcher.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    UploadFiles: typeof import('./src/components/UploadFiles.vue')['default']
-    UserHeader: typeof import('./src/components/UserHeader.vue')['default']
+    UploadFiles: typeof import('./src/components/author/UploadFiles.vue')['default']
+    UserHeader: typeof import('./src/components/author/UserHeader.vue')['default']
     VanButton: typeof import('vant/es')['Button']
     VanCell: typeof import('vant/es')['Cell']
     VanCellGroup: typeof import('vant/es')['CellGroup']

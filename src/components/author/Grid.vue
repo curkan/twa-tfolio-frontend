@@ -17,8 +17,8 @@ import { ref, onMounted, nextTick, reactive, watch } from 'vue'
 import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
 import { useWebApp, useWebAppClipboard, useWebAppHapticFeedback, useWebAppMainButton } from 'vue-tg'
-import IconPlus from './icons/IconPlus.vue'
-import IconRemove from './icons/IconRemove.vue'
+import IconPlus from './../icons/IconPlus.vue'
+import IconRemove from './../icons/IconRemove.vue'
 import { showImagePreview, showLoadingToast, showToast } from 'vant'
 import { useHandleDoubleTap } from '@/composables/handles/useHandleDoubleTap'
 import { useHandleUploadImage } from '@/composables/handles/useHandleUploadImage'
@@ -42,20 +42,10 @@ let grid: GridStack | null = null
 let items = ref<GridStackWidget[]>([])
 const visibleRemove = ref(false)
 
-window.Telegram.WebApp.setHeaderColor('#212121')
-window.Telegram.WebApp.setBackgroundColor('#212121')
-window.Telegram.WebApp.setBottomBarColor('#212121')
-window.Telegram.WebApp.setBottomBarColor('#212121')
-window.Telegram.WebApp.expand()
-
-if (window.Telegram.WebApp.isVersionAtLeast('8.0')) {
-  window.Telegram.WebApp.requestFullscreen()
-}
-
 const onSelect = (option) => {
   if (option.name == i18n.global.t('share.link')) {
     const url = window.location.origin + window.location.pathname
-    navigator.clipboard.writeText(import.meta.env.VITE_BACKEND_URL + '?startapp=' + useWebApp().initDataUnsafe.user.id)
+    navigator.clipboard.writeText(import.meta.env.VITE_BOT_URL + '?startapp=' + useWebApp().initDataUnsafe.user.id)
   }
 
   showToast(i18n.global.t('main.copied'));
@@ -75,7 +65,6 @@ onMounted(async () => {
       grid?.removeAll()
 
       nodes.value = gridData.value?.grid
-      console.log(gridData.value?.grid)
       nodes.value?.forEach((node: Node) => {
         node.internalId = node.id
         node.id = 'w_' + node.sort
