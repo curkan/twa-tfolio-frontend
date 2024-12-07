@@ -11,7 +11,7 @@ const onSelect = (action) => {
   showToast(action.text)
   i18n.global.locale.value = action.text
   localStorage.setItem('lang', action.text)
-  useWebAppMainButton().setMainButtonText(i18n.global.t('tg.share'))
+  useWebAppMainButton().setMainButtonText(useWebAppMainButton().mainButtonText.value)
 }
 </script>
 
