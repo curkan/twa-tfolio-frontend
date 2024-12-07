@@ -16,7 +16,9 @@
   .info {
     width: 100%;
     .username {
-      font-weight: bold;
+      span {
+        font-weight: bold;
+      }
     }
   }
 }
