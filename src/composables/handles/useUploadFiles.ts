@@ -17,6 +17,7 @@ export function useUploadFiles(
       chunking: true,
       maxFilesize: 35,
       chunkSize: 3000000,
+      maxThumbnailFilesize: 35,
       acceptedFiles: 'image/*',
       headers: {
         authorization: 'Bearer ' + btoa(useUserData() as string),
