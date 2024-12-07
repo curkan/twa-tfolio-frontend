@@ -13,6 +13,7 @@ import { showImagePreview } from 'vant'
 import { useHandleDoubleTap } from '@/composables/handles/useHandleDoubleTap'
 import { gridData, useGetGridData } from '@/composables/grid/useGetGridData'
 import type {Node} from '@/composables/types/grid.type'
+import {useMainPortfolio} from '@/composables/mainButton/useMainPortfolio'
 const nodes = ref<Node[]>()
 
 const props = defineProps({
@@ -24,6 +25,8 @@ let grid: GridStack | null = null
 
 let items = ref<GridStackWidget[]>([])
 const visibleRemove = ref(false)
+
+useMainPortfolio()
 
 onMounted(async () => {
   await useGetGridData(props.userId)
