@@ -75,7 +75,8 @@ export const useApiStore = defineStore('useApiStore', () => {
       })
       .catch((error: AxiosError) => {
         // errorModalStore.showErrorModal(errorModalStore.title, error.message)
-        return false
+        // console.log(error)
+        return error
       })
       .finally(() => {
         // spinnerStore.hideSpinner() // Optional

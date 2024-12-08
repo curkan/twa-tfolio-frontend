@@ -21,7 +21,6 @@ import IconPlus from './../icons/IconPlus.vue'
 import IconRemove from './../icons/IconRemove.vue'
 import { showImagePreview, showLoadingToast, showToast } from 'vant'
 import { useHandleDoubleTap } from '@/composables/handles/useHandleDoubleTap'
-import { useHandleUploadImage } from '@/composables/handles/useHandleUploadImage'
 import type { Node } from '@/composables/types/grid.type'
 import { gridData, useGetGridData } from '@/composables/grid/useGetGridData'
 import { useUpdateGrid } from '@/composables/grid/useUpdateGrid'
@@ -215,19 +214,17 @@ const remove = (widget: GridStackWidget) => {
 </script>
 
 <template>
-  <button class="add-new-widget" type="button" @click="triggerFileInput">
+  <div class="add-new-widget" type="button" @click="$refs.fileInput.click()">
     <IconPlus />
     <label style="display: none">
-      <input
+      <div
         id="newImage"
-        type="file"
         name="newImage"
         accept=".png, .jpg, .webp, .jpeg"
         ref="fileInput"
-        @change="useHandleUploadImage($event, [], addNewWidget)"
       />
     </label>
-  </button>
+  </div>
 
   <div class="grid-stack">
     <div

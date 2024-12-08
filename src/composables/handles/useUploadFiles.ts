@@ -9,6 +9,8 @@ export function useUploadFiles(
   args: any,
   callback: (...args: any) => void,
 ) {
+  const isAndroid = navigator.userAgent.match(/Android/i) !== null;
+
   const myDropzone = new Dropzone(
     container as HTMLElement,
     {
@@ -18,7 +20,7 @@ export function useUploadFiles(
       maxFilesize: 35,
       chunkSize: 3000000,
       maxThumbnailFilesize: 35,
-      acceptedFiles: 'image/*',
+      ...(isAndroid ? {} : { acceptedFiles: 'image/*' }),
       headers: {
         authorization: 'Bearer ' + btoa(useUserData() as string),
       },
