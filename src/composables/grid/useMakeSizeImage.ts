@@ -9,5 +9,8 @@ export const useMakeSizeImage = (w: Node) => {
     4: 'original',
   }
 
-  return w.image[sizes[size]]
+  const sizeKey = Math.min(size, 4)
+
+  console.log(sizeKey)
+  return w.image[sizes[sizeKey]]
 }
