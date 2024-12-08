@@ -88,7 +88,7 @@ const openImagePreview = (link: string, startPosition: number) => {
         <div class="img">
           <img
             v-lazy="{ src: useMakeSizeImage(w), delay: 300 }"
-            @click="useHandleDoubleTap(index, [w.image.original, index], openImagePreview)"
+            @click="openImagePreview(w.image.original, index)"
           />
         </div>
       </div>
