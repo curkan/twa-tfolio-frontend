@@ -9,7 +9,7 @@ export function useUploadFiles(
   args: any,
   callback: (...args: any) => void,
 ) {
-  const isAndroid = navigator.userAgent.match(/Android/i) !== null;
+  const isAndroid = navigator.userAgent.match(/Android/i) !== null
 
   const myDropzone = new Dropzone(
     container as HTMLElement,
@@ -54,5 +54,4 @@ export function useUploadFiles(
     )
     showToast(message)
   })
-
 }

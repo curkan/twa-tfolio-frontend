@@ -1,9 +1,5 @@
 <script setup lang="ts">
-import {
-  GridStack,
-  type GridStackElement,
-  type GridStackWidget,
-} from 'gridstack'
+import { GridStack, type GridStackElement, type GridStackWidget } from 'gridstack'
 
 import { ref, onMounted, nextTick, watch, onUnmounted } from 'vue'
 import 'gridstack/dist/gridstack.min.css'
@@ -12,14 +8,14 @@ import IconRemove from './../icons/IconRemove.vue'
 import { showImagePreview } from 'vant'
 import { useHandleDoubleTap } from '@/composables/handles/useHandleDoubleTap'
 import { gridData, useGetGridData } from '@/composables/grid/useGetGridData'
-import type {Node} from '@/composables/types/grid.type'
-import {useMainPortfolio} from '@/composables/mainButton/useMainPortfolio'
-import {useMakeSizeImage} from '@/composables/grid/useMakeSizeImage'
+import type { Node } from '@/composables/types/grid.type'
+import { useMainPortfolio } from '@/composables/mainButton/useMainPortfolio'
+import { useMakeSizeImage } from '@/composables/grid/useMakeSizeImage'
 const gridFirstLoaded = ref<boolean>(false)
 const nodes = ref<Node[]>()
 
 const props = defineProps({
-  userId: Number
+  userId: Number,
 })
 
 // DO NOT use ref(null) as proxies GS will break all logic when comparing structures... see https://github.com/gridstack/gridstack.js/issues/2115
@@ -66,7 +62,6 @@ const openImagePreview = (link: string, startPosition: number) => {
     closeable: true,
   })
 }
-
 </script>
 
 <template>
@@ -96,8 +91,8 @@ const openImagePreview = (link: string, startPosition: number) => {
   </div>
   <div v-if="gridFirstLoaded == true && items.length == 0" class="empty-grid">
     <div class="center">
-      <div class="header">{{$t('consumerPortfolio.header')}}</div>
-      <div class="text">{{$t('consumerPortfolio.text')}}</div>
+      <div class="header">{{ $t('consumerPortfolio.header') }}</div>
+      <div class="text">{{ $t('consumerPortfolio.text') }}</div>
     </div>
   </div>
 </template>

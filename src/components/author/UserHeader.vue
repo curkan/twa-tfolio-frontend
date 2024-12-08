@@ -6,8 +6,8 @@ import { showSuccessToast, showToast } from 'vant'
 import { onMounted, ref, watch } from 'vue'
 import { useWebAppHapticFeedback, useWebAppMainButton } from 'vue-tg'
 import LocaleSwitcher from './../main/LocaleSwitcher.vue'
-import {useSave} from '@/composables/mainButton/useSave'
-import {useChangeShowShare, useShare} from '@/composables/mainButton/useShare'
+import { useSave } from '@/composables/mainButton/useSave'
+import { useChangeShowShare, useShare } from '@/composables/mainButton/useShare'
 const showEditProfile = ref(false)
 const displayName = ref()
 const biography = ref()
@@ -75,7 +75,7 @@ const saveUserProfile = () => {
           {{ useUserStore().authUser?.display_name }}
         </span>
         <span v-else class="notSet">
-          {{$t('main.displayNameNotFound')}}
+          {{ $t('main.displayNameNotFound') }}
         </span>
       </div>
       <div class="biography" v-if="!loading">
@@ -83,7 +83,7 @@ const saveUserProfile = () => {
           {{ useUserStore().authUser?.biography }}
         </span>
         <span v-else class="notSet">
-          {{$t('main.biographyNotFound')}}
+          {{ $t('main.biographyNotFound') }}
         </span>
       </div>
     </div>

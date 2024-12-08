@@ -7,11 +7,7 @@ import {
   type GridStackWidget,
 } from 'gridstack'
 
-import type {
-  ShareSheetProps,
-  ShareSheetOption,
-  ShareSheetOptions,
-} from 'vant';
+import type { ShareSheetProps, ShareSheetOption, ShareSheetOptions } from 'vant'
 
 import { ref, onMounted, nextTick, reactive, watch, onUnmounted } from 'vue'
 import 'gridstack/dist/gridstack.min.css'
@@ -25,32 +21,34 @@ import type { Node } from '@/composables/types/grid.type'
 import { gridData, useGetGridData } from '@/composables/grid/useGetGridData'
 import { useUpdateGrid } from '@/composables/grid/useUpdateGrid'
 import { useUploadFiles } from '@/composables/handles/useUploadFiles'
-import i18n from '@/i18n';
-import {showShare, useOffShareEvent, useShare} from '@/composables/mainButton/useShare';
-import {useMakeSizeImage} from '@/composables/grid/useMakeSizeImage';
+import i18n from '@/i18n'
+import { showShare, useOffShareEvent, useShare } from '@/composables/mainButton/useShare'
+import { useMakeSizeImage } from '@/composables/grid/useMakeSizeImage'
 
 const fileInput = ref<HTMLInputElement>()
 const nodes = ref<Node[]>()
 const gridFirstLoaded = ref<boolean>(false)
-const options = [
-  { name: i18n.global.t('share.link'), icon: 'link' },
-];
+const options = [{ name: i18n.global.t('share.link'), icon: 'link' }]
 
 // DO NOT use ref(null) as proxies GS will break all logic when comparing structures... see https://github.com/gridstack/gridstack.js/issues/2115
 let grid: GridStack | null = null
 
 let items = ref<GridStackWidget[]>([])
+const timeoutId = ref()
+const lastState = ref<[]>()
 const visibleRemove = ref(false)
 
 const onSelect = (option) => {
   if (option.name == i18n.global.t('share.link')) {
     const url = window.location.origin + window.location.pathname
-    navigator.clipboard.writeText(import.meta.env.VITE_BOT_URL + '?startapp=' + useWebApp().initDataUnsafe.user.id)
+    navigator.clipboard.writeText(
+      import.meta.env.VITE_BOT_URL + '?startapp=' + useWebApp().initDataUnsafe.user.id,
+    )
   }
 
-  showToast(i18n.global.t('main.copied'));
-  showShare.value = false;
-};
+  showToast(i18n.global.t('main.copied'))
+  showShare.value = false
+}
 
 onUnmounted(() => {
   useOffShareEvent()
@@ -63,7 +61,6 @@ onMounted(async () => {
     column: 4,
   })
   await useGetGridData().then(() => {
-
     nodes.value = gridData.value?.grid
     nodes.value?.forEach((node: Node) => {
       node.internalId = node.id
@@ -127,7 +124,6 @@ onMounted(async () => {
   })
 })
 
-
 const openImagePreview = (link: string, startPosition: number) => {
   showImagePreview({
     images: gridData.value?.grid.map((a) => a.image.original),
@@ -148,8 +144,6 @@ const removeVisibleIcon = () => {
 const onChange = async (event: Event, changeItems: any) => {
   if (gridFirstLoaded.value === false) return
 
-  console.log('onChange auth')
-
   changeItems.forEach((item: any) => {
     const widget = items.value.find((w: GridStackWidget) => w.id === item.id)
 
@@ -163,7 +157,7 @@ const onChange = async (event: Event, changeItems: any) => {
   })
 
   const gridStackItems = document.querySelectorAll('.grid-stack .grid-stack-item')
-  const newData = Array.from(gridStackItems).map((el) => {
+  const newState = Array.from(gridStackItems).map((el) => {
     return {
       id: el.getAttribute('internal-id'),
       sort: el.getAttribute('id'),
@@ -174,9 +168,15 @@ const onChange = async (event: Event, changeItems: any) => {
     }
   })
 
-  console.log(newData)
+  lastState.value = newState;
 
-  await useUpdateGrid(newData)
+  clearTimeout(timeoutId.value);
+  timeoutId.value = setTimeout(async () => {
+    if (lastState) {
+      await useUpdateGrid(lastState.value).then(() => {
+      })
+    }
+  }, 1000);
 }
 
 const handleTouch = (e: Event) => {
@@ -189,10 +189,6 @@ const handleTouch = (e: Event) => {
 
   target.closest('.grid-stack-item')?.classList.add('ui-remove-visible')
   visibleRemove.value = !visibleRemove.value
-}
-
-const triggerFileInput = () => {
-  fileInput?.value?.click()
 }
 
 const addNewWidget = (newNode: Node) => {
@@ -217,12 +213,7 @@ const remove = (widget: GridStackWidget) => {
   <div class="add-new-widget" type="button" @click="$refs.fileInput.click()">
     <IconPlus />
     <label style="display: none">
-      <div
-        id="newImage"
-        name="newImage"
-        accept=".png, .jpg, .webp, .jpeg"
-        ref="fileInput"
-      />
+      <div id="newImage" name="newImage" accept=".png, .jpg, .webp, .jpeg" ref="fileInput" />
     </label>
   </div>
 
@@ -255,8 +246,8 @@ const remove = (widget: GridStackWidget) => {
   </div>
   <div v-if="gridFirstLoaded == true && items.length == 0" class="empty-grid">
     <div class="center">
-      <div class="header">{{$t('portfolio.header')}}</div>
-      <div class="text">{{$t('portfolio.text')}}</div>
+      <div class="header">{{ $t('portfolio.header') }}</div>
+      <div class="text">{{ $t('portfolio.text') }}</div>
     </div>
   </div>
   <van-share-sheet

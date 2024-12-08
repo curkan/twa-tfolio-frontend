@@ -1,9 +1,9 @@
-import i18n from '@/i18n';
-import {useAppStore} from '@/stores/mainButtonStore';
+import i18n from '@/i18n'
+import { useAppStore } from '@/stores/mainButtonStore'
 import { ref, computed } from 'vue'
-import {useWebApp, useWebAppMainButton} from 'vue-tg';
+import { useWebApp, useWebAppMainButton } from 'vue-tg'
 
-export const showShare = ref(false);
+export const showShare = ref(false)
 
 export const useMainPortfolio = () => {
   useWebAppMainButton().setMainButtonText(i18n.global.t('tg.mainPortfolio'))

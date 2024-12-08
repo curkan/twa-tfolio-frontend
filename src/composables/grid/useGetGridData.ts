@@ -4,9 +4,7 @@ import { useApiStore } from '../useApiStore'
 
 export const gridData = ref<GridData>()
 
-export const useGetGridData = async (
-  userId?: Number
-) => {
+export const useGetGridData = async (userId?: Number) => {
   let query = ''
   if (userId !== undefined) {
     query = '?user_id=' + userId
