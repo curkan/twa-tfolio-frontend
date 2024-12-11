@@ -16,7 +16,9 @@
   .info {
     width: 100%;
     .username {
-      font-weight: bold;
+      span {
+        font-weight: bold;
+      }
     }
   }
 }
@@ -25,4 +27,8 @@
   position: absolute;
   margin-right: 1em;
   right: 0;
+}
+
+.notSet {
+  color: var(--vt-c-text-dark-3);
 }

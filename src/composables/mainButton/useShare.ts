@@ -1,9 +1,9 @@
-import i18n from '@/i18n';
+import i18n from '@/i18n'
 import { ref, computed } from 'vue'
-import {useWebAppMainButton} from 'vue-tg';
+import { useWebAppMainButton } from 'vue-tg'
 
-const { onMainButtonClicked } = useWebAppMainButton();
-export const showShare = ref(false);
+const { onMainButtonClicked } = useWebAppMainButton()
+export const showShare = ref(false)
 
 export const useShare = () => {
   useWebAppMainButton().setMainButtonText(i18n.global.t('tg.share'))
@@ -13,4 +13,8 @@ export const useShare = () => {
 
 export const useChangeShowShare = () => {
   showShare.value = !showShare.value
+}
+
+export const useOffShareEvent = () => {
+  Telegram.WebApp.offEvent('mainButtonClicked', useChangeShowShare)
 }

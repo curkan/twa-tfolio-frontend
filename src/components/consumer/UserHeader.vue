@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { useAuth } from '@/composables/auth/auth'
-import { useUserStore } from '@/composables/stores/useUserStore'
 import { onMounted, ref, watch } from 'vue'
 import LocaleSwitcher from './../main/LocaleSwitcher.vue'
-import type {IUser} from '@/composables/types/user.type';
-import {useUserInfo} from '@/composables/user/useUserInfo';
+import type { IUser } from '@/composables/types/user.type'
+import { useUserInfo } from '@/composables/user/useUserInfo'
 const displayName = ref()
 const photoUrl = ref()
 const biography = ref()
@@ -12,7 +10,7 @@ const loading = ref(true)
 const userInfo = ref<IUser>()
 
 const props = defineProps({
-  userId: Number
+  userId: Number,
 })
 
 onMounted(() => {
@@ -23,7 +21,6 @@ onMounted(() => {
     biography.value = response.biography
   })
 })
-
 </script>
 
 <template>
@@ -32,10 +29,7 @@ onMounted(() => {
   </div>
   <div class="user">
     <div class="logo">
-      <img
-        v-if="photoUrl"
-        v-lazy="{ src: photoUrl, error: '/images/not-logo.png' }"
-      />
+      <img v-if="photoUrl" v-lazy="{ src: photoUrl, error: '/images/not-logo.png' }" />
       <van-skeleton-image v-else />
     </div>
     <div class="info">

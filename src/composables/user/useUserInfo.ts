@@ -1,9 +1,7 @@
 import { useApiStore } from '../useApiStore'
 import type { IUser } from '../types/user.type'
 
-export const useUserInfo = async (
-  userId: number
-) => {
+export const useUserInfo = async (userId: number) => {
   return useApiStore()
     .get('api/v1/common/users/' + userId)
     .then((response) => {
