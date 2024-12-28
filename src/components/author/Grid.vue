@@ -7,8 +7,6 @@ import {
   type GridStackWidget,
 } from 'gridstack'
 
-import type { ShareSheetProps, ShareSheetOption, ShareSheetOptions } from 'vant'
-
 import { ref, onMounted, nextTick, reactive, watch, onUnmounted } from 'vue'
 import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
@@ -168,15 +166,14 @@ const onChange = async (event: Event, changeItems: any) => {
     }
   })
 
-  lastState.value = newState;
+  lastState.value = newState
 
-  clearTimeout(timeoutId.value);
+  clearTimeout(timeoutId.value)
   timeoutId.value = setTimeout(async () => {
     if (lastState) {
-      await useUpdateGrid(lastState.value).then(() => {
-      })
+      await useUpdateGrid(lastState.value).then(() => {})
     }
-  }, 1000);
+  }, 1000)
 }
 
 const handleTouch = (e: Event) => {

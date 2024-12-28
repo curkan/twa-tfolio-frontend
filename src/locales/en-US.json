@@ -24,5 +24,9 @@
     "text": "Maybe the user is just doing portfolio design, come back later."
   },
   "userDisplayName": "Display name",
-  "userBiography": "About you"
+  "userBiography": "About you",
+  "writeAboutYou": "Write about you",
+  "checkedShowButtonContact": "Show button «Send me»",
+  "sendMe": "Send me",
+  "editProfile": "Edit profile"
 }

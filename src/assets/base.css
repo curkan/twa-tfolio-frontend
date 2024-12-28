@@ -26,15 +26,26 @@
 /* semantic color variables for this project */
 :root {
   --color-background: var(--vt-c-black);
-  --color-background-soft: var(--vt-c-white-soft);
-  --color-background-mute: var(--vt-c-white-mute);
+  --color-background-soft: var(--vt-c-black-soft);
+  --color-background-mute: var(--vt-c-black-mute);
 
-  --color-border: var(--vt-c-divider-light-2);
-  --color-border-hover: var(--vt-c-divider-light-1);
+  --color-border: var(--vt-c-divider-dark-2);
+  --color-border-hover: var(--vt-c-divider-dark-1);
 
-  --color-heading: var(--vt-c-text-light-1);
-  --color-text: var(--vt-c-text-light-1);
-  --color-text-2: var(--vt-c-text-light-2);
+  --color-heading: var(--vt-c-text-dark-1);
+  --color-text: var(--vt-c-text-dark-2);
+  --color-text-2: var(--vt-c-text-dark-3);
+  /**/
+  /* --color-background: var(--vt-c-black); */
+  /* --color-background-soft: var(--vt-c-white-soft); */
+  /* --color-background-mute: var(--vt-c-white-mute); */
+  /**/
+  /* --color-border: var(--vt-c-divider-light-2); */
+  /* --color-border-hover: var(--vt-c-divider-light-1); */
+  /**/
+  /* --color-heading: var(--vt-c-text-light-1); */
+  /* --color-text: var(--vt-c-text-light-1); */
+  /* --color-text-2: var(--vt-c-text-light-2); */
 
   --section-gap: 160px;
 }
@@ -43,6 +54,8 @@
   --van-uploader-border-radius: 10px;
   --van-image-preview-close-icon-size: 35px;
   --van-uploader-file-background: var(--vt-c-black-soft);
+  --van-button-danger-background: #f059596b;
+  --van-button-danger-border-color: #f0595900;
 }
 
 @media (prefers-color-scheme: dark) {

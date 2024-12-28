@@ -15,10 +15,31 @@
 
   .info {
     width: 100%;
+    display: flex;
+    flex-direction: column;
     .username {
       span {
         font-weight: bold;
       }
+    }
+  }
+
+  .buttons {
+    margin-top: auto;
+    display: flex;
+    gap: 5px;
+
+    a,
+    button {
+      color: var(--color-heading);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: center;
+      background-color: var(--color-background-soft);
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-weight: 600;
     }
   }
 }

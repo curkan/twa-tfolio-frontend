@@ -8,10 +8,42 @@ import { useWebAppHapticFeedback, useWebAppMainButton } from 'vue-tg'
 import LocaleSwitcher from './../main/LocaleSwitcher.vue'
 import { useSave } from '@/composables/mainButton/useSave'
 import { useChangeShowShare, useShare } from '@/composables/mainButton/useShare'
+import IconTelegram from '../icons/IconTelegram.vue'
+import IconInstagram from '../icons/IconInstagram.vue'
+import IconYoutube from '../icons/IconYoutube.vue'
+import type { ISocialLinks } from '@/composables/types/social-links.type'
 const showEditProfile = ref(false)
 const displayName = ref()
 const biography = ref()
 const loading = ref(true)
+const checkedShowButtonContact = ref(true)
+const links = ref<ISocialLinks[]>()
+const addRow = () => {
+  if (
+    links.value !== undefined &&
+    links.value.length > 0 &&
+    links.value[links.value.length - 1].url == ''
+  )
+    return
+
+  if (links.value === undefined) {
+    links.value = [
+      {
+        id: 1,
+        url: '',
+      },
+    ]
+  } else {
+    links.value?.push({
+      id: links.value.length + 1,
+      url: '',
+    })
+  }
+}
+
+const removeRowLink = (id: number) => {
+  links.value = links.value?.filter((item) => item.id !== id)
+}
 
 onMounted(async () => {
   if (useUserStore().authUser) {
@@ -86,6 +118,18 @@ const saveUserProfile = () => {
           {{ $t('main.biographyNotFound') }}
         </span>
       </div>
+      <div class="buttons" @click.stop>
+        <a href="https://t.me/tsurkan_hut" class="send-me">
+          <IconTelegram />
+          <span>{{ $t('sendMe') }}</span>
+        </a>
+        <a>
+          <IconInstagram />
+        </a>
+        <a>
+          <IconYoutube />
+        </a>
+      </div>
     </div>
   </div>
   <van-popup
@@ -99,22 +143,57 @@ const saveUserProfile = () => {
     class="popup-edit-user"
   >
     <div class="data">
-      <van-cell-group title="Edit profile">
+      <van-cell-group :title="$t('editProfile')">
         <van-field
+          :label-width="150"
           v-model="displayName"
           name="displayName"
           :label="$t('userDisplayName')"
-          placeholder="Display name"
           @keypress=""
           :rules="[{ required: true, message: 'Display name is required' }]"
+          :placeholder="$t('userDisplayName')"
         />
 
         <van-field
           v-model="biography"
+          :label-width="150"
+          type="textarea"
           name="about"
+          autosize
           :label="$t('userBiography')"
-          placeholder="Write about you"
+          :placeholder="$t('writeAboutYou')"
         />
+
+        <van-field
+          :label-width="200"
+          name="notifyInBot"
+          :label="$t('checkedShowButtonContact')"
+          center
+          label-align="left"
+          input-align="right"
+        >
+          <template #input right>
+            <van-switch v-model="checkedShowButtonContact" />
+          </template>
+        </van-field>
+      </van-cell-group>
+
+      <van-cell-group :title="$t('editSocialLinks')" required="auto">
+        <van-field
+          v-for="link in links"
+          :key="link.id"
+          v-model="link.url"
+          placeholder="Введите ссылку"
+        >
+          <template #button>
+            <van-button size="small" type="danger" @click="removeRowLink(link.id)">
+              Удалить
+            </van-button>
+          </template>
+        </van-field>
+        <div class="button">
+          <van-button block type="primary" @click="addRow">Добавить ссылку</van-button>
+        </div>
       </van-cell-group>
     </div>
     <!-- <div class="button"> -->
@@ -137,6 +216,7 @@ const saveUserProfile = () => {
   justify-content: space-between;
   flex-direction: column;
   padding-bottom: var(--tg-safe-area-inset-bottom);
+
   .button {
     padding: var(--van-cell-vertical-padding) var(--van-cell-horizontal-padding);
   }
