@@ -3,46 +3,46 @@ import { useAuth } from '@/composables/auth/auth'
 import { useUserStore } from '@/composables/stores/useUserStore'
 import { useUpdateUser } from '@/composables/user/useUpdateUser'
 import { showSuccessToast, showToast } from 'vant'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, shallowRef, watch } from 'vue'
 import { useWebAppHapticFeedback, useWebAppMainButton } from 'vue-tg'
 import LocaleSwitcher from './../main/LocaleSwitcher.vue'
 import { useSave } from '@/composables/mainButton/useSave'
 import { useChangeShowShare, useShare } from '@/composables/mainButton/useShare'
 import IconTelegram from '../icons/IconTelegram.vue'
-import IconInstagram from '../icons/IconInstagram.vue'
-import IconYoutube from '../icons/IconYoutube.vue'
 import type { ISocialLinks } from '@/composables/types/social-links.type'
+import {socialLinksData, useGetSocialLinksData} from '@/composables/socialLinks/useGetSocialLinksData'
+import {getSocialLinkIcon} from '@/composables/socialLinks/socialLinks'
 const showEditProfile = ref(false)
 const displayName = ref()
 const biography = ref()
 const loading = ref(true)
 const checkedShowButtonContact = ref(true)
-const links = ref<ISocialLinks[]>()
+const socialLinks = ref<ISocialLinks[]>()
 const addRow = () => {
   if (
-    links.value !== undefined &&
-    links.value.length > 0 &&
-    links.value[links.value.length - 1].url == ''
+    socialLinks.value !== undefined &&
+    socialLinks.value.length > 0 &&
+    socialLinks.value[socialLinks.value.length - 1].url == ''
   )
     return
 
-  if (links.value === undefined) {
-    links.value = [
+  if (socialLinks.value === undefined) {
+    socialLinks.value = [
       {
         id: 1,
         url: '',
       },
     ]
   } else {
-    links.value?.push({
-      id: links.value.length + 1,
+    socialLinks.value?.push({
+      id: Math.max(...socialLinks.value.map(link => link.id)) + 1,
       url: '',
     })
   }
 }
 
 const removeRowLink = (id: number) => {
-  links.value = links.value?.filter((item) => item.id !== id)
+  socialLinks.value = socialLinks.value?.filter((item) => item.id !== id)
 }
 
 onMounted(async () => {
@@ -57,6 +57,11 @@ onMounted(async () => {
       biography.value = useUserStore().authUser?.biography
     })
   }
+
+
+  await useGetSocialLinksData().then(() => {
+    socialLinks.value = socialLinksData.value
+  })
 })
 
 watch(
@@ -118,19 +123,19 @@ const saveUserProfile = () => {
           {{ $t('main.biographyNotFound') }}
         </span>
       </div>
-      <div class="buttons" @click.stop>
-        <a href="https://t.me/tsurkan_hut" class="send-me">
-          <IconTelegram />
-          <span>{{ $t('sendMe') }}</span>
-        </a>
-        <a>
-          <IconInstagram />
-        </a>
-        <a>
-          <IconYoutube />
-        </a>
-      </div>
     </div>
+  </div>
+  <div class="buttons" @click.stop>
+    <a href="https://t.me/tsurkan_hut" class="send-me">
+      <IconTelegram />
+      <span>{{ $t('sendMe') }}</span>
+    </a>
+    <van-loading v-if="socialLinksData === undefined"/>
+    <TransitionGroup>
+      <a :href="social.url" v-for="social in socialLinks" :key="social.id">
+        <component :is="getSocialLinkIcon(social.url)" />
+      </a>
+    </TransitionGroup>
   </div>
   <van-popup
     v-model:show="showEditProfile"
@@ -179,18 +184,21 @@ const saveUserProfile = () => {
       </van-cell-group>
 
       <van-cell-group :title="$t('editSocialLinks')" required="auto">
-        <van-field
-          v-for="link in links"
+        <div
+          class="link-block"
+          v-for="link in socialLinks"
           :key="link.id"
-          v-model="link.url"
-          placeholder="Введите ссылку"
         >
-          <template #button>
-            <van-button size="small" type="danger" @click="removeRowLink(link.id)">
-              Удалить
-            </van-button>
-          </template>
-        </van-field>
+          <component :is="getSocialLinkIcon(link.url)"/>
+          <van-field
+            v-model="link.url"
+            placeholder="Введите ссылку"
+          >
+            <template #button>
+              <IconRemove @click="removeRowLink(link.id)"/>
+            </template>
+          </van-field>
+        </div>
         <div class="button">
           <van-button block type="primary" @click="addRow">Добавить ссылку</van-button>
         </div>
