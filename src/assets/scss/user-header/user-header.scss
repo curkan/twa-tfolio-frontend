@@ -23,7 +23,6 @@
       }
     }
   }
-
 }
 .buttons {
   margin-top: auto;
@@ -38,7 +37,7 @@
       font-weight: 600;
     }
   }
-  
+
   a,
   button {
     color: var(--color-heading);
@@ -64,7 +63,7 @@
   align-items: center;
   padding: var(--van-cell-vertical-padding) var(--van-cell-horizontal-padding);
   gap: 15px;
-  
+
   .van-cell {
     padding: 0 !important;
   }

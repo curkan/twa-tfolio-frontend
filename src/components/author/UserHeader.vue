@@ -10,8 +10,11 @@ import { useSave } from '@/composables/mainButton/useSave'
 import { useChangeShowShare, useShare } from '@/composables/mainButton/useShare'
 import IconTelegram from '../icons/IconTelegram.vue'
 import type { ISocialLinks } from '@/composables/types/social-links.type'
-import {socialLinksData, useGetSocialLinksData} from '@/composables/socialLinks/useGetSocialLinksData'
-import {getSocialLinkIcon} from '@/composables/socialLinks/socialLinks'
+import {
+  socialLinksData,
+  useGetSocialLinksData,
+} from '@/composables/socialLinks/useGetSocialLinksData'
+import { getFullUrl, getSocialLinkIcon } from '@/composables/socialLinks/socialLinks'
 const showEditProfile = ref(false)
 const displayName = ref()
 const biography = ref()
@@ -35,7 +38,7 @@ const addRow = () => {
     ]
   } else {
     socialLinks.value?.push({
-      id: Math.max(...socialLinks.value.map(link => link.id)) + 1,
+      id: Math.max(...socialLinks.value.map((link) => link.id)) + 1,
       url: '',
     })
   }
@@ -50,14 +53,15 @@ onMounted(async () => {
     loading.value = false
     displayName.value = useUserStore().authUser?.display_name
     biography.value = useUserStore().authUser?.biography
+    checkedShowButtonContact.value = useUserStore().authUser?.settings.enabled_send_me_button!
   } else {
     await useAuth().then(() => {
       loading.value = false
       displayName.value = useUserStore().authUser?.display_name
       biography.value = useUserStore().authUser?.biography
+      checkedShowButtonContact.value = useUserStore().authUser?.settings.enabled_send_me_button!
     })
   }
-
 
   await useGetSocialLinksData().then(() => {
     socialLinks.value = socialLinksData.value
@@ -84,7 +88,12 @@ const showEditProfileHandle = () => {
 const saveUserProfile = () => {
   Telegram.WebApp.offEvent('mainButtonClicked', saveUserProfile)
   showEditProfile.value = false
-  useUpdateUser(displayName.value, biography.value).then((response) => {
+  useUpdateUser(
+    displayName.value,
+    biography.value,
+    socialLinks.value,
+    checkedShowButtonContact.value,
+  ).then((response) => {
     useWebAppHapticFeedback().notificationOccurred('success')
     showSuccessToast('Success')
   })
@@ -126,13 +135,17 @@ const saveUserProfile = () => {
     </div>
   </div>
   <div class="buttons" @click.stop>
-    <a href="https://t.me/tsurkan_hut" class="send-me">
+    <a
+      :href="`https://t.me/${useUserStore()?.authUser?.username}`"
+      class="send-me"
+      v-if="useUserStore()?.authUser?.settings.enabled_send_me_button"
+    >
       <IconTelegram />
       <span>{{ $t('sendMe') }}</span>
     </a>
-    <van-loading v-if="socialLinksData === undefined"/>
+    <van-loading v-if="socialLinksData === undefined" />
     <TransitionGroup>
-      <a :href="social.url" v-for="social in socialLinks" :key="social.id">
+      <a :href="getFullUrl(social.url)" v-for="social in socialLinks" :key="social.id">
         <component :is="getSocialLinkIcon(social.url)" />
       </a>
     </TransitionGroup>
@@ -184,18 +197,11 @@ const saveUserProfile = () => {
       </van-cell-group>
 
       <van-cell-group :title="$t('editSocialLinks')" required="auto">
-        <div
-          class="link-block"
-          v-for="link in socialLinks"
-          :key="link.id"
-        >
-          <component :is="getSocialLinkIcon(link.url)"/>
-          <van-field
-            v-model="link.url"
-            placeholder="Введите ссылку"
-          >
+        <div class="link-block" v-for="link in socialLinks" :key="link.id">
+          <component :is="getSocialLinkIcon(link.url)" />
+          <van-field v-model="link.url" placeholder="Введите ссылку">
             <template #button>
-              <IconRemove @click="removeRowLink(link.id)"/>
+              <IconRemove @click="removeRowLink(link.id)" />
             </template>
           </van-field>
         </div>

@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { useApiStore } from '../useApiStore'
-import type {ISocialLinks} from '../types/social-links.type'
+import type { ISocialLinks } from '../types/social-links.type'
 
 export const socialLinksData = ref<ISocialLinks[]>()
 
