@@ -68,7 +68,7 @@ onMounted(() => {
     </a>
     <van-loading v-if="socialLinksData === undefined" />
     <TransitionGroup>
-      <a :href="getFullUrl(social.url)" v-for="social in socialLinks" :key="social.id">
+      <a :href="getFullUrl(social.url)" target="_blank" v-for="social in socialLinks" :key="social.id">
         <component :is="getSocialLinkIcon(social.url)" />
       </a>
     </TransitionGroup>
