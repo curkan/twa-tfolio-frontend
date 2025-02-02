@@ -15,6 +15,8 @@
 
   .info {
     width: 100%;
+    display: flex;
+    flex-direction: column;
     .username {
       span {
         font-weight: bold;
@@ -22,11 +24,49 @@
     }
   }
 }
+.buttons {
+  margin-top: auto;
+  padding-top: 10px;
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  align-items: stretch;
+
+  .send-me {
+    span {
+      font-weight: 600;
+    }
+  }
+
+  a,
+  button {
+    color: var(--color-heading);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    background-color: var(--color-background-soft);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: 600;
+  }
+}
 
 .locale-block {
   position: absolute;
   margin-right: 1em;
   right: 0;
+}
+
+.link-block {
+  display: flex;
+  align-items: center;
+  padding: var(--van-cell-vertical-padding) var(--van-cell-horizontal-padding);
+  gap: 15px;
+
+  .van-cell {
+    padding: 0 !important;
+  }
 }
 
 .notSet {

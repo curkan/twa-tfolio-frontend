@@ -4,9 +4,7 @@ import { GridStack, type GridStackElement, type GridStackWidget } from 'gridstac
 import { ref, onMounted, nextTick, watch, onUnmounted } from 'vue'
 import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
-import IconRemove from './../icons/IconRemove.vue'
 import { showImagePreview } from 'vant'
-import { useHandleDoubleTap } from '@/composables/handles/useHandleDoubleTap'
 import { gridData, useGetGridData } from '@/composables/grid/useGetGridData'
 import type { Node } from '@/composables/types/grid.type'
 import { useMainPortfolio } from '@/composables/mainButton/useMainPortfolio'
@@ -22,7 +20,6 @@ const props = defineProps({
 let grid: GridStack | null = null
 
 let items = ref<GridStackWidget[]>([])
-const visibleRemove = ref(false)
 
 useMainPortfolio()
 

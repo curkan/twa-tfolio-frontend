@@ -28,6 +28,7 @@ const onSelect = (action) => {
 
 <style scoped lang="scss">
 .locale {
+  font-size: 12px;
   display: block;
   padding: 2px 20px;
   border-radius: 5px;
