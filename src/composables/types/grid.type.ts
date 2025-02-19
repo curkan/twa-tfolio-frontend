@@ -3,6 +3,11 @@ export interface GridData {
   grid: Node[]
 }
 
+export enum NodeType {
+  image = 'image',
+  video = 'video'
+}
+
 export interface Node {
   id: number | string
   sort: number
@@ -10,6 +15,8 @@ export interface Node {
   y: number
   w: number
   h: number
+  type: NodeType
+  video_url?: string
   image: Image
   internalId?: number | string
 }

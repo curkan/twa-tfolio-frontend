@@ -10,20 +10,25 @@ import {
 import { ref, onMounted, nextTick, reactive, watch, onUnmounted } from 'vue'
 import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
-import { useWebApp, useWebAppClipboard, useWebAppHapticFeedback, useWebAppMainButton } from 'vue-tg'
+import { useMiniApp, useHapticFeedback } from 'vue-tg/latest'
 import IconPlus from './../icons/IconPlus.vue'
 import IconRemove from './../icons/IconRemove.vue'
 import { showImagePreview, showLoadingToast, showToast } from 'vant'
 import { useHandleDoubleTap } from '@/composables/handles/useHandleDoubleTap'
-import type { Node } from '@/composables/types/grid.type'
+import { NodeType, type Node } from '@/composables/types/grid.type'
 import { gridData, useGetGridData } from '@/composables/grid/useGetGridData'
 import { useUpdateGrid } from '@/composables/grid/useUpdateGrid'
 import { useUploadFiles } from '@/composables/handles/useUploadFiles'
 import i18n from '@/i18n'
 import { showShare, useOffShareEvent, useShare } from '@/composables/mainButton/useShare'
 import { useMakeSizeImage } from '@/composables/grid/useMakeSizeImage'
+import UploadPopover from '../main/UploadPopover.vue'
+import {useUploadVideo} from '@/composables/handles/useUploadVideo'
+import IconPlay from '../icons/IconPlay.vue'
+import {useOpenVideo} from '@/composables/handles/useOpenVideo'
 
 const fileInput = ref<HTMLInputElement>()
+const fileInputVideo = ref<HTMLInputElement>()
 const nodes = ref<Node[]>()
 const gridFirstLoaded = ref<boolean>(false)
 const options = [{ name: i18n.global.t('share.link'), icon: 'link' }]
@@ -40,7 +45,7 @@ const onSelect = (option) => {
   if (option.name == i18n.global.t('share.link')) {
     const url = window.location.origin + window.location.pathname
     navigator.clipboard.writeText(
-      import.meta.env.VITE_BOT_URL + '?startapp=' + useWebApp().initDataUnsafe.user.id,
+      import.meta.env.VITE_BOT_URL + '?startapp=' + useMiniApp().initDataUnsafe.user?.id,
     )
   }
 
@@ -76,6 +81,7 @@ onMounted(async () => {
   })
 
   if (fileInput.value !== null) useUploadFiles(fileInput.value, [], addNewWidget)
+  if (fileInputVideo.value !== undefined) useUploadVideo(fileInputVideo.value, [], addNewWidget)
 
   watch(
     () => gridData.value,
@@ -113,12 +119,12 @@ onMounted(async () => {
     }
     grid?.enableMove(false)
 
-    useWebAppHapticFeedback().impactOccurred('light')
+    useHapticFeedback().impactOccurred('light')
   })
 
   grid.on('dragstop', function (event: Event, el: GridItemHTMLElement) {
     grid?.enableMove(true)
-    useWebAppHapticFeedback().selectionChanged()
+    useHapticFeedback().selectionChanged()
   })
 })
 
@@ -215,20 +221,40 @@ const remove = (widget: GridStackWidget) => {
   const selector = `#${widget.id}`
   grid?.removeWidget(selector, true)
 }
+
+const uploadImageEvent = () => {
+  fileInput.value.click()
+}
+
+const uploadVideoEvent = () => {
+  fileInputVideo.value.click()
+}
+
+const openVideoPreview = (node: Node) => {
+  gridFirstLoaded.value = false
+  useOpenVideo(node, [], () => {})
+}
 </script>
 
 <template>
-  <div class="add-new-widget" type="button" @click="$refs.fileInput.click()">
-    <IconPlus />
-    <label style="display: none">
-      <div id="newImage" name="newImage" accept=".png, .jpg, .webp, .jpeg" ref="fileInput" />
-    </label>
+  <div class="add-new-widget-wapper">
+    <UploadPopover @upload-image="uploadImageEvent" @upload-video="uploadVideoEvent">
+      <template #content>
+        <div class="add-new-widget" type="button">
+            <IconPlus />
+            <label style="display: none">
+              <input type="file" id="newImage" name="newImage" accept=".png, .jpg, .webp, .jpeg" ref="fileInput" />
+              <input type="file" id="newVideo" name="newVideo" accept="video/*" ref="fileInputVideo" />
+            </label>
+        </div>
+      </template>
+    </UploadPopover>
   </div>
 
   <div class="grid-stack">
     <div
       v-if="items.length > 0"
-      v-for="(w, index) in items"
+      v-for="(w, index) in items as Node[]"
       @click="handleTouch"
       @touchstart="handleTouch"
       class="grid-stack-item"
@@ -238,17 +264,27 @@ const remove = (widget: GridStackWidget) => {
       :gs-h="w.h"
       :gs-id="w.internalId"
       :internal-id="w.internalId"
-      :id="w.id"
+      :id="String(w.id)"
       :key="w.id"
     >
       <div class="grid-stack-item-content">
-        <div class="img">
+        <div class="img" v-if="w.type == NodeType.image">
           <img
             v-lazy="{ src: useMakeSizeImage(w), delay: 300 }"
             @click="useHandleDoubleTap(index, [w.image.original, index], openImagePreview)"
           />
         </div>
-        <button v-if="visibleRemove" class="ui-remove" @click="remove(w)"><IconRemove /></button>
+        <div
+          class="img video"
+          v-else-if="w.type == NodeType.video"
+          @click="useHandleDoubleTap(index, [w], openVideoPreview)"
+        >
+          <img
+            v-lazy="{ src: useMakeSizeImage(w), delay: 300 }"
+          />
+          <IconPlay class="icon-play" />
+        </div>
+        <button v-if="visibleRemove" class="ui-remove" @click="remove(w as GridStackWidget)"><IconRemove /></button>
       </div>
     </div>
   </div>
