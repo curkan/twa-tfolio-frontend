@@ -10,7 +10,7 @@ import {
 import { ref, onMounted, nextTick, reactive, watch, onUnmounted } from 'vue'
 import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
-import { useWebApp, useWebAppClipboard, useWebAppHapticFeedback, useWebAppMainButton } from 'vue-tg'
+import { useMiniApp, useHapticFeedback } from 'vue-tg/latest'
 import IconPlus from './../icons/IconPlus.vue'
 import IconRemove from './../icons/IconRemove.vue'
 import { showImagePreview, showLoadingToast, showToast } from 'vant'
@@ -22,8 +22,11 @@ import { useUploadFiles } from '@/composables/handles/useUploadFiles'
 import i18n from '@/i18n'
 import { showShare, useOffShareEvent, useShare } from '@/composables/mainButton/useShare'
 import { useMakeSizeImage } from '@/composables/grid/useMakeSizeImage'
+import UploadPopover from '../main/UploadPopover.vue'
+import {useUploadVideo} from '@/composables/handles/useUploadVideo'
 
 const fileInput = ref<HTMLInputElement>()
+const fileInputVideo = ref<HTMLInputElement>()
 const nodes = ref<Node[]>()
 const gridFirstLoaded = ref<boolean>(false)
 const options = [{ name: i18n.global.t('share.link'), icon: 'link' }]
@@ -40,7 +43,7 @@ const onSelect = (option) => {
   if (option.name == i18n.global.t('share.link')) {
     const url = window.location.origin + window.location.pathname
     navigator.clipboard.writeText(
-      import.meta.env.VITE_BOT_URL + '?startapp=' + useWebApp().initDataUnsafe.user.id,
+      import.meta.env.VITE_BOT_URL + '?startapp=' + useMiniApp().initDataUnsafe.user?.id,
     )
   }
 
@@ -76,6 +79,7 @@ onMounted(async () => {
   })
 
   if (fileInput.value !== null) useUploadFiles(fileInput.value, [], addNewWidget)
+  if (fileInputVideo.value !== undefined) useUploadVideo(fileInputVideo.value, [])
 
   watch(
     () => gridData.value,
@@ -113,12 +117,12 @@ onMounted(async () => {
     }
     grid?.enableMove(false)
 
-    useWebAppHapticFeedback().impactOccurred('light')
+    useHapticFeedback().impactOccurred('light')
   })
 
   grid.on('dragstop', function (event: Event, el: GridItemHTMLElement) {
     grid?.enableMove(true)
-    useWebAppHapticFeedback().selectionChanged()
+    useHapticFeedback().selectionChanged()
   })
 })
 
@@ -204,14 +208,32 @@ const remove = (widget: GridStackWidget) => {
   const selector = `#${widget.id}`
   grid?.removeWidget(selector, true)
 }
+
+const uploadImageEvent = () => {
+  fileInput.value.click()
+}
+
+const uploadVideoEvent = () => {
+  console.log(fileInputVideo)
+  fileInputVideo.value.click()
+  // router.push('/upload-video')
+}
+
 </script>
 
 <template>
-  <div class="add-new-widget" type="button" @click="$refs.fileInput.click()">
-    <IconPlus />
-    <label style="display: none">
-      <div id="newImage" name="newImage" accept=".png, .jpg, .webp, .jpeg" ref="fileInput" />
-    </label>
+  <div class="add-new-widget-wapper">
+    <UploadPopover @upload-image="uploadImageEvent" @upload-video="uploadVideoEvent">
+      <template #content>
+        <div class="add-new-widget" type="button">
+            <IconPlus />
+            <label style="display: none">
+              <div id="newImage" name="newImage" accept=".png, .jpg, .webp, .jpeg" ref="fileInput" />
+              <div id="newVideo" name="newVideo" accept=".mp4, .mov" ref="fileInputVideo" />
+            </label>
+        </div>
+      </template>
+    </UploadPopover>
   </div>
 
   <div class="grid-stack">

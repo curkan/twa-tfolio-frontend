@@ -11,7 +11,17 @@ import VueLazyLoad from 'vue3-lazyload'
 import 'vant/lib/index.css'
 import i18n from './i18n'
 
+import 'vlitejs/vlite.css';
+import Vue3TouchEvents, {
+  type Vue3TouchEventsOptions,
+} from "vue3-touch-events";
+
 const app = createApp(App)
+
+app.use<Vue3TouchEventsOptions>(Vue3TouchEvents, {
+  disableClick: false
+  // any other global options...
+})
 
 app.use(createPinia())
 app.use(router)

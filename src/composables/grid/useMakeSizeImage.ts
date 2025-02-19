@@ -11,6 +11,5 @@ export const useMakeSizeImage = (w: Node) => {
 
   const sizeKey = Math.min(size, 4)
 
-  console.log(sizeKey)
   return w.image[sizes[sizeKey]]
 }

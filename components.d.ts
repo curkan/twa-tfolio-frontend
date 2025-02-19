@@ -31,6 +31,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     UploadFiles: typeof import('./src/components/author/UploadFiles.vue')['default']
+    UploadPopover: typeof import('./src/components/main/UploadPopover.vue')['default']
     UserHeader: typeof import('./src/components/author/UserHeader.vue')['default']
     VanButton: typeof import('vant/es')['Button']
     VanCellGroup: typeof import('vant/es')['CellGroup']
