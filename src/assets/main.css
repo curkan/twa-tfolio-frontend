@@ -1,4 +1,5 @@
 @import './base.css';
+@import './transitions.css';
 
 a,
 .green {
@@ -48,4 +49,14 @@ a,
 
 .van-skeleton {
   padding: 0 !important;
+}
+
+.van-notify {
+  padding-top: calc(var(--tg-safe-area-inset-top) + var(--tg-content-safe-area-inset-top)) !important;
+  padding-bottom: 10px !important;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.van-notify--danger {
+  background: #DC3D52 !important;
 }

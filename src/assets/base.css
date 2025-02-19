@@ -56,6 +56,8 @@
   --van-uploader-file-background: var(--vt-c-black-soft);
   --van-button-danger-background: #f059596b;
   --van-button-danger-border-color: #f0595900;
+
+  --van-notify-padding: 1em + var(--tg-safe-area-inset-top, 0px);
 }
 
 @media (prefers-color-scheme: dark) {
