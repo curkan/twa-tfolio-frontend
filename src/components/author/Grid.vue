@@ -122,6 +122,29 @@ onMounted(async () => {
   })
 })
 
+function modifySaveData(arr: any) {
+  return arr.map(item => {
+    // Добавляем поле sort с значением 'w_[id]'
+    item.sort = `w_${item.id}`;
+    item.w = item.w ?? 1
+    item.h = item.h ?? 1
+
+    // Удаляем поле content
+    delete item.content;
+
+    return item;
+  });
+}
+
+
+function saveGridData(): GridStackWidget[] {
+  let serializedData = grid?.save();
+
+  serializedData = modifySaveData(serializedData) as GridStackWidget[]
+
+  return serializedData
+}
+
 const openImagePreview = (link: string, startPosition: number) => {
   showImagePreview({
     images: gridData.value?.grid.map((a) => a.image.original),
@@ -154,26 +177,14 @@ const onChange = async (event: Event, changeItems: any) => {
     updatedWidget.h = item.h
   })
 
-  const gridStackItems = document.querySelectorAll('.grid-stack .grid-stack-item')
-  const newState = Array.from(gridStackItems).map((el) => {
-    return {
-      id: el.getAttribute('internal-id'),
-      sort: el.getAttribute('id'),
-      x: el.getAttribute('gs-x'),
-      y: el.getAttribute('gs-y'),
-      w: el.getAttribute('gs-w') ?? 1,
-      h: el.getAttribute('gs-h') ?? 1,
-    }
-  })
-
-  lastState.value = newState
+  lastState.value = saveGridData() as []
 
   clearTimeout(timeoutId.value)
   timeoutId.value = setTimeout(async () => {
     if (lastState) {
-      await useUpdateGrid(lastState.value).then(() => {})
+      await useUpdateGrid(lastState.value as []).then(() => {})
     }
-  }, 1000)
+  }, 600)
 }
 
 const handleTouch = (e: Event) => {
