@@ -23,4 +23,20 @@
     object-fit: cover;
     border-radius: 5px;
   }
+
+  .progress {
+    height: 25px;
+    background-color: #505050;
+    transition: all 0.2s;
+    $percent: 100;
+
+    @while $percent >= 0 {
+      &[data-progress='#{$percent}'] {
+        width: calc(100% * $percent/100);
+      }
+
+      $percent: $percent - 1;
+    }
+
+  }
 }

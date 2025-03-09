@@ -98,6 +98,11 @@ const saveUserProfile = () => {
     showSuccessToast('Success')
   })
 }
+
+const doSwipeDown = () => {
+  showEditProfile.value = false
+};
+
 </script>
 
 <template>
@@ -160,7 +165,9 @@ const saveUserProfile = () => {
     :style="{ height: '80%' }"
     class="popup-edit-user"
   >
-    <div class="data">
+    <div class="data"
+      v-touch:swipe.bottom="doSwipeDown"
+    >
       <van-cell-group :title="$t('editProfile')">
         <van-field
           :label-width="150"
