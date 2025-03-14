@@ -29,5 +29,17 @@
   "checkedShowButtonContact": "Отображать кнопку «Связаться»",
   "sendMe": "Связаться",
   "editProfile": "Редактирование профиля",
-  "editSocialLinks": "Редактирование ссылок"
+  "editSocialLinks": "Редактирование ссылок",
+  "dropzone": {
+    "dictDefaultMessage": "Перетащите файлы сюда для загрузки",
+    "dictFallbackMessage": "Ваш браузер не поддерживает загрузку файлов через drag'n'drop.",
+    "dictFallbackText": "Пожалуйста, используйте форму ниже для загрузки файлов, как в старые времена.",
+    "dictFileTooBig": "Максимальный размер файла: 100 MiB.",
+    "dictInvalidFileType": "Вы не можете загружать файлы этого типа.",
+    "dictResponseError": "Сервер ответил с кодом ошибки.",
+    "dictCancelUpload": "Отменить загрузку",
+    "dictCancelUploadConfirmation": "Вы уверены, что хотите отменить эту загрузку?",
+    "dictRemoveFile": "Удалить файл",
+    "dictMaxFilesExceeded": "Вы не можете загрузить больше файлов."
+  }
 }

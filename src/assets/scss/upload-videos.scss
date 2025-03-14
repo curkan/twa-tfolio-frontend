@@ -1,0 +1,45 @@
+.upload-videos {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 1em;
+  padding-top: calc(
+    1em + var(--tg-safe-area-inset-top, 0px) + var(--tg-content-safe-area-inset-top, 0px)
+  );
+  background-color: var(--vt-c-black-soft);
+  z-index: 10;
+  margin-left: -1em;
+  margin-top: -1em;
+  margin-top: calc(
+    -1em - (var(--tg-safe-area-inset-top, 0px) + var(--tg-content-safe-area-inset-top, 0px))
+  );
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+
+  .video {
+    display: flex;
+    gap: 10px;
+
+    .progress {
+      height: 25px;
+      background-color: #505050;
+      transition: all 0.2s;
+      border-radius: 5px;
+      $percent: 100;
+
+      @while $percent >= 0 {
+        &[data-progress='#{$percent}'] {
+          width: calc(100% * $percent/100);
+        }
+
+        $percent: $percent - 1;
+      }
+
+    }
+  }
+
+
+}
+
