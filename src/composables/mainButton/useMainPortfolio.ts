@@ -3,8 +3,6 @@ import { useAppStore } from '@/stores/mainButtonStore'
 import { ref, computed } from 'vue'
 import { useWebApp, useWebAppMainButton } from 'vue-tg'
 
-export const showShare = ref(false)
-
 export const useMainPortfolio = () => {
   useWebAppMainButton().setMainButtonText(i18n.global.t('tg.mainPortfolio'))
   useWebAppMainButton().showMainButton()

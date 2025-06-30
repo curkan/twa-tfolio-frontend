@@ -22,19 +22,11 @@ import IconPlus from './../icons/IconPlus.vue'
 import UploadPopover from '../main/UploadPopover.vue'
 import GridItem from './GridItem.vue'
 import type {Node} from '@/composables/types/grid.type'
-
-// Props
-const props = defineProps({
-  userId: {
-    type: Number,
-    required: true
-  }
-})
+import {showShare} from '@/composables/mainButton/useShare'
 
 // Refs
 const gridFirstLoaded = ref(false)
 const visibleRemove = ref(false)
-const showShare = ref(false)
 
 // Services initialization (Dependency Injection)
 const { gridInstance, initializeGrid, destroyGrid } = useGridInitializer()
@@ -68,7 +60,7 @@ onUnmounted(() => {
 async function initializeGridComponents() {
   initializeGrid({ column: 4, float: false })
 
-  await loadGridData(props.userId)
+  await loadGridData()
   gridFirstLoaded.value = true
 
   if (gridItems.value) {
@@ -186,6 +178,7 @@ function hideRemoveIcons() {
   <ShareSheet
     v-model:show="showShare"
     :options="shareOptions"
+    :cancel-text="$t('main.cancel')"
     @select="handleShareSelect"
   />
 </template>

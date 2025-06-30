@@ -7,6 +7,10 @@
     "displayNameNotFound": "Имя не задано",
     "biographyNotFound": "Биография не задана"
   },
+  "errors": {
+    "user_not_found": "Пользователь не найден",
+    "copy_failed": "Ошибка при копировании"
+  },
   "share": {
     "link": "Ссылка"
   },

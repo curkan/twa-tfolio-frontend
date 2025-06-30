@@ -7,6 +7,10 @@
     "displayNameNotFound": "Name is not set",
     "biographyNotFound": "Biography is not set"
   },
+  "errors": {
+    "user_not_found": "User not found",
+    "copy_failed": "Copy failed"
+  },
   "share": {
     "link": "Link"
   },

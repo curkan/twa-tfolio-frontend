@@ -6,8 +6,9 @@ import type {Node} from '../types/grid.type'
 export function useGridDataService(gridInstance: Ref<GridStack | null>) {
   const gridItems = ref<GridStackWidget[]>([])
 
-  const loadGridData = async (userId: number) => {
-    await useGetGridData(userId)
+  const loadGridData = async () => {
+    await useGetGridData()
+
     if (gridData.value?.grid) {
       gridItems.value = transformNodesToWidgets(gridData.value.grid)
     }

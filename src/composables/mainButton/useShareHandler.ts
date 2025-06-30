@@ -1,23 +1,25 @@
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useMiniApp } from 'vue-tg/latest'
 import { showToast } from 'vant'
 import i18n from '@/i18n'
 import { showShare, useOffShareEvent, useShare } from '@/composables/mainButton/useShare'
+import {useUserStore} from '../stores/useUserStore'
 
 export function useShareHandler() {
   const shareOptions = ref([
     {
       name: i18n.global.t('share.link'),
       icon: 'link',
-      handler: () => copyUserLink
+      handler: () => copyUserLink()
     }
   ])
 
   /**
    * Копирует ссылку на профиль пользователя
    */
-  const copyUserLink = () => {
-    const userId = useMiniApp().initDataUnsafe.user?.id
+  const copyUserLink = async () => {
+    const userId = useUserStore().authUser?.id
+
     if (!userId) {
       showToast(i18n.global.t('errors.user_not_found'))
       return
