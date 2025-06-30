@@ -7,7 +7,9 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    EmptyGridState: typeof import('./src/components/consumer/EmptyGridState.vue')['default']
     Grid: typeof import('./src/components/author/Grid.vue')['default']
+    GridItem: typeof import('./src/components/consumer/GridItem.vue')['default']
     IconBehance: typeof import('./src/components/icons/IconBehance.vue')['default']
     IconBoosty: typeof import('./src/components/icons/IconBoosty.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
