@@ -26,11 +26,11 @@ const gridItems = ref<GridStackWidget[]>([])
 useMainPortfolio()
 
 onUnmounted(() => {
-  resetGridData()
-
-  nextTick(() => {
-    destroyGrid()
-  })
+  // resetGridData()
+  //
+  // nextTick(() => {
+  //   destroyGrid()
+  // })
 })
 
 onMounted(async () => {
