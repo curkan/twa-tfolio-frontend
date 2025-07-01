@@ -1,0 +1,13 @@
+.node-item-bottom {
+  padding-left: var(--tf-card-padding);
+  padding-right: var(--tf-card-padding);
+
+  .btn-element {
+    transition: 0.2s all;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-text);
+    }
+  }
+}

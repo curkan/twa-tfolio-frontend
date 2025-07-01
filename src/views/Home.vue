@@ -59,7 +59,7 @@ watch(
 onMounted(async () => {
   backButton.hide()
 
-  await useAuth()
+  useAuth()
 
   if (useMiniApp().initDataUnsafe.start_param) {
     useAppStore().currentMode = 'consumer'

@@ -55,7 +55,7 @@ onMounted(async () => {
     biography.value = useUserStore().authUser?.biography
     checkedShowButtonContact.value = useUserStore().authUser?.settings.enabled_send_me_button!
   } else {
-    await useAuth().then(() => {
+    useAuth().then(() => {
       loading.value = false
       displayName.value = useUserStore().authUser?.display_name
       biography.value = useUserStore().authUser?.biography
@@ -63,7 +63,7 @@ onMounted(async () => {
     })
   }
 
-  await useGetSocialLinksData().then(() => {
+  useGetSocialLinksData().then(() => {
     socialLinks.value = socialLinksData.value
   })
 })

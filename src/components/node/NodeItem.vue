@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { NodeType, type Node } from '@/composables/types/grid.type'
+import NodeTop from './NodeTop.vue';
+import ImageViewer from './ImageViewer.vue';
+import NodeBottom from './NodeBottom.vue';
 
 const props = defineProps({
   item: {
@@ -11,15 +14,18 @@ const props = defineProps({
 
 <template>
   <div
-    class="node-item"
+    class="node-item w-full"
   >
+    <NodeTop class="w-full"/>
     <div class="node-item-content">
       <template v-if="item.type === NodeType.image">
         <div class="img">
-          <img v-lazy="{ src: item.image.original, delay: 0 }" />
+          <ImageViewer :image-src="item.image.original"/>
+          <!-- <img v-lazy="{ src: item.image.original, delay: 0 }" /> -->
         </div>
       </template>
     </div>
+    <NodeBottom class="w-full"/>
   </div>
 </template>
 <style scoped lang="scss">
