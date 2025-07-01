@@ -32,7 +32,7 @@ const visibleRemove = ref(false)
 const { gridInstance, initializeGrid, destroyGrid } = useGridInitializer()
 const { saveGridData, debouncedUpdateGrid } = useGridUpdateService(gridInstance as Ref<GridStack | null>)
 const { gridItems, loadGridData, addGridItem, removeGridItem } = useGridDataService(gridInstance as Ref<GridStack | null>)
-const { openImagePreview, openVideoPreview } = useMediaHandler()
+const { openNodePage, openVideoPreview } = useMediaHandler()
 const { setupShare, cleanupShare, handleShareSelect } = useShareHandler()
 const { setupUploadHandlers, triggerImageUpload, triggerVideoUpload } = useUploadHandler(addGridItem, fileInput as Ref<HTMLInputElement>, fileInputVideo as Ref<HTMLInputElement>)
 const { handleDoubleTap } = useDoubleTapHandler()
@@ -156,6 +156,7 @@ function hideRemoveIcons() {
   </div>
 
   <!-- Grid Items -->
+      <!-- @image-click="(img, idx) => handleDoubleTap(idx, [img, idx], openNodePage)" -->
   <div class="grid-stack">
     <GridItem
       v-for="(item, index) in gridItems"
@@ -166,7 +167,7 @@ function hideRemoveIcons() {
       @touch="handleItemTouch"
       @click="handleItemTouch"
       @remove="removeGridItem"
-      @image-click="(img, idx) => handleDoubleTap(idx, [img, idx], openImagePreview)"
+      @image-click="(node) => handleDoubleTap(0, [node], openNodePage)"
       @video-click="(node) => handleDoubleTap(0, [node], openVideoPreview)"
     />
   </div>

@@ -10,6 +10,11 @@ const router = createRouter({
       component: Home,
     },
     {
+      path: '/p/:id',
+      name: 'published',
+      component: () => import('../views/NodeView.vue'),
+    },
+    {
       path: '/video/:id',
       name: 'video',
       component: () => import('../views/VideoView.vue'),

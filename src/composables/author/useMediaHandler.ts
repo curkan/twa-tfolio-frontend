@@ -1,6 +1,7 @@
 import { showImagePreview } from 'vant'
 import { useOpenVideo } from '@/composables/handles/useOpenVideo'
 import type { Node } from '@/composables/types/grid.type'
+import {useOpenImage} from '../handles/useOpenImage'
 
 export function useMediaHandler() {
   /**
@@ -15,6 +16,13 @@ export function useMediaHandler() {
       startPosition: startPosition ?? 0,
       closeable: true,
       showIndex: false,
+    })
+  }
+
+  const openNodePage = (node: Node) => {
+    useOpenImage(node, [], () => {
+      // Callback после закрытия видео
+      console.log('Node closed')
     })
   }
 
@@ -48,6 +56,7 @@ export function useMediaHandler() {
   }
 
   return {
+    openNodePage,
     openImagePreview,
     openVideoPreview,
     handleMediaClick

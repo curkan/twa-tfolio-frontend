@@ -19,7 +19,7 @@ const props = defineProps({
 const emit = defineEmits(['remove', 'image-click', 'video-click'])
 
 const handleImageClick = () => {
-  emit('image-click', props.item.image?.original, props.index)
+  emit('image-click', props.item)
 }
 
 const handleVideoClick = () => {

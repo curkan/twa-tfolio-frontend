@@ -92,7 +92,7 @@ if (miniApp.isVersionAtLeast('8.0')) {
 </script>
 
 <template>
-  <div style="height: 100%;">
+  <div style="height: 100%; padding: 1em;">
     <UploadFiles />
     <component
       :is="currentComponentHeader"
