@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import NodeItem from '@/components/node/NodeItem.vue';
 import {useGetNodeData} from '@/composables/grid/useGetNodeData';
+import {useViewportStore} from '@/composables/stores/useViewportStore';
 import type {Node} from '@/composables/types/grid.type';
 import router from '@/router';
 import {useNodeStore} from '@/stores/useNodeStore';
@@ -25,9 +26,10 @@ onMounted(() => {
   }
 })
 
-
 const doSwipeRight = () => {
-  router.push('/')
+  if (!useViewportStore().disabledBackSwipe) {
+    router.push('/')
+  }
 };
 
 </script>

@@ -21,6 +21,15 @@ import IconFire from '../icons/IconFire.vue';
       </div>
       <div class="right-elements"></div>
     </section>
+    <section>
+      <div class="date text-zinc-400">19 сентября</div>
+    </section>
+    <section class="description">
+      <article class="">
+        <span class="username font-bold mr-2">tsurkan</span>
+        <span>Данные работы были сделаны для фестиваля кроссовок в Москве.</span>
+      </article>
+    </section>
   </div>
 </template>
 <style scoped lang="scss">

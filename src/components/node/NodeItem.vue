@@ -21,7 +21,6 @@ const props = defineProps({
       <template v-if="item.type === NodeType.image">
         <div class="img">
           <ImageViewer :image-src="item.image.original"/>
-          <!-- <img v-lazy="{ src: item.image.original, delay: 0 }" /> -->
         </div>
       </template>
     </div>

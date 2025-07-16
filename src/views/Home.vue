@@ -88,6 +88,7 @@ const miniApp = useMiniApp()
 if (miniApp.isVersionAtLeast('8.0')) {
 //or if (window.Telegram.WebApp.isVersionAtLeast('8.0')) {
   window.Telegram.WebApp.requestFullscreen()
+  window.Telegram.WebApp.disableVerticalSwipes()
 }
 </script>
 
