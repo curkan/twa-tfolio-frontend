@@ -23,6 +23,11 @@ const props = defineProps({
           <ImageViewer :image-src="item.image.original"/>
         </div>
       </template>
+      <template v-if="item.type === NodeType.video">
+        <div class="img">
+          <ImageViewer :video-src="item.video_url"/>
+        </div>
+      </template>
     </div>
     <NodeBottom class="w-full"/>
   </div>

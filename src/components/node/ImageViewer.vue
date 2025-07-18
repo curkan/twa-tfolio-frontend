@@ -5,7 +5,11 @@ import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 const props = defineProps({
   imageSrc: {
     type: String,
-    required: true
+    required: false
+  },
+  videoSrc: {
+    type: String,
+    required: false
   }
 })
 
@@ -176,6 +180,7 @@ onUnmounted(() => {
     @touchcancel="handleTouchEnd"
   >
     <img
+      v-if="imageSrc"
       ref="image"
       :src="imageSrc"
       :style="imageStyle"
@@ -183,6 +188,17 @@ onUnmounted(() => {
       alt="Zoomable image"
       draggable="false"
     >
+    <video
+      v-if="videoSrc"
+      class="zoom-image"
+      ref="image"
+      id="player"
+      :style="imageStyle"
+      :src="videoSrc"
+      autoplay
+      playsinline
+      draggable="false"
+    ></video>
   </div>
 </template>
 

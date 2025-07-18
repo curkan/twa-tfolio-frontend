@@ -34,7 +34,7 @@ const doSwipeRight = () => {
 
 </script>
 <template>
-  <div class="node-container" v-touch:swipe.right="doSwipeRight">
+  <div class="node-container h-full" v-touch:swipe.right="doSwipeRight">
     <Transition>
       <div v-if="useNodeStore().currentNode">
         <NodeItem :item="useNodeStore().currentNode as Node" />
