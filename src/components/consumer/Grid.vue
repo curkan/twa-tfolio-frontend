@@ -34,7 +34,7 @@ onUnmounted(() => {
 })
 
 onMounted(async () => {
-  initializeGrid({ column: 4, float: false, staticGrid: true })
+  initializeGrid({margin: '5px', column: 4, float: false, staticGrid: true })
 
   await fetchGridData(props.userId)
 
@@ -76,7 +76,7 @@ const attachWidgetsToGrid = (widgets: GridStackWidget[]) => {
       :key="item.id"
       :item="item"
       :index="index"
-      @image-click="openImagePreview"
+      @image-click="openImagePreview(item as Node)"
       @video-click="openVideoPreview"
     />
   </div>

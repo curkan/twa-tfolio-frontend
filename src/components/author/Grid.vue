@@ -58,7 +58,7 @@ onUnmounted(() => {
 
 // Initialization
 async function initializeGridComponents() {
-  initializeGrid({ column: 4, float: false })
+  initializeGrid({margin: '5px', column: 4, float: false })
 
   await loadGridData()
   gridFirstLoaded.value = true

@@ -1,14 +1,12 @@
-import { showImagePreview } from 'vant'
 import { useOpenVideo } from '@/composables/handles/useOpenVideo'
-import { gridData } from '@/composables/grid/useGetGridData'
+import {useOpenImage} from '../handles/useOpenImage'
+import type { Node } from '@/composables/types/grid.type'
 
 export function useMediaPreview() {
-  const openImagePreview = (link: string, startPosition: number) => {
-    showImagePreview({
-      images: gridData.value?.grid.map(a => a.image.original),
-      closeOnClickOverlay: true,
-      startPosition: startPosition ?? 1,
-      closeable: true,
+  const openImagePreview = (node: Node) => {
+    useOpenImage(node, [], () => {
+      // Callback после закрытия видео
+      console.log('Node closed')
     })
   }
 

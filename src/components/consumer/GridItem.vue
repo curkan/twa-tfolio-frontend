@@ -38,13 +38,13 @@ const handleVideoClick = () => {
     <div class="grid-stack-item-content">
       <template v-if="item.type === NodeType.image">
         <div class="img" @click="handleImageClick">
-          <img v-lazy="{ src: useMakeSizeImage(item as Node), delay: 300 }" />
+          <img v-lazy="{ src: useMakeSizeImage(item as Node), delay: 0 }" />
         </div>
       </template>
 
       <template v-else-if="item.type === NodeType.video">
         <div class="img video" @click="handleVideoClick">
-          <img v-lazy="{ src: useMakeSizeImage(item as Node), delay: 300 }" />
+          <img v-lazy="{ src: useMakeSizeImage(item as Node), delay: 0 }" />
           <IconPlay class="icon-play" />
         </div>
       </template>

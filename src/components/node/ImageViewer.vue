@@ -71,6 +71,8 @@ const getCenter = (touches: TouchList) => {
 
 const handleTouchStart = (e: TouchEvent) => {
   if (e.touches.length === 2) {
+    e.preventDefault();  // отменяем стандартное поведение (скролл)
+    e.stopPropagation(); // останавливаем всплытие
     // Начало пинч-зума
     initialDistance.value = getDistance(
       e.touches[0].clientX, e.touches[0].clientY,
@@ -143,31 +145,6 @@ const getDistance = (x1: number, y1: number, x2: number, y2: number) => {
   return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
 }
 
-// Обработчики для мыши
-const handleWheel = (e: WheelEvent) => {
-  e.preventDefault()
-  const delta = -Math.sign(e.deltaY)
-  const newScale = Math.min(Math.max(scale.value + delta * 0.1, minScale), maxScale)
-
-  if (newScale !== scale.value) {
-    scale.value = newScale
-    if (newScale === minScale) {
-      resetPosition()
-    }
-  }
-}
-
-onMounted(() => {
-  if (container.value) {
-    container.value.addEventListener('wheel', handleWheel, { passive: false })
-  }
-})
-
-onUnmounted(() => {
-  if (container.value) {
-    container.value.removeEventListener('wheel', handleWheel)
-  }
-})
 </script>
 
 <template>
@@ -207,9 +184,6 @@ onUnmounted(() => {
   width: 100%;
   height: 100%;
   position: relative;
-  touch-action: none;
-  user-select: none;
-  -webkit-user-drag: none;
 }
 
 .zoom-image {
