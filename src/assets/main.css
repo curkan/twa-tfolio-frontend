@@ -25,8 +25,8 @@ a,
 }
 
 .ui-resizable-se {
-  right: 15px !important;
-  bottom: 15px !important;
+  right: 10px !important;
+  bottom: 10px !important;
   width: 25px !important;
   height: 25px !important;
 }
