@@ -3,6 +3,7 @@ import { ref, onMounted, nextTick, onUnmounted, computed } from 'vue'
 import { type GridStackElement, type GridStackWidget } from 'gridstack'
 import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
+import { useHapticFeedback } from 'vue-tg/latest'
 
 import { type Node } from '@/composables/types/grid.type'
 import { useMediaPreview } from '@/composables/grid/useMediaPreview'
@@ -22,6 +23,8 @@ const { openImagePreview, openVideoPreview } = useMediaPreview()
 
 const gridFirstLoaded = ref<boolean>(false)
 const gridItems = ref<GridStackWidget[]>([])
+const clickedStates = ref<Record<number, boolean>>({});
+const haptic = useHapticFeedback()
 
 useMainPortfolio()
 
@@ -67,6 +70,15 @@ const attachWidgetsToGrid = (widgets: GridStackWidget[]) => {
     })
   })
 }
+
+function handleItemTouch(e: Event, index: number) {
+  clickedStates.value[index] = true;
+  haptic.impactOccurred('light')
+
+  setTimeout(() => {
+    clickedStates.value[index] = false;
+  }, 200);
+}
 </script>
 
 <template>
@@ -76,6 +88,8 @@ const attachWidgetsToGrid = (widgets: GridStackWidget[]) => {
       :key="item.id"
       :item="item"
       :index="index"
+      @touch="(e: Event) => handleItemTouch(e, index)"
+      @click="(e: Event) => handleItemTouch(e, index)"
       @image-click="openImagePreview(item as Node)"
       @video-click="openVideoPreview"
     />

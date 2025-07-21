@@ -17,6 +17,9 @@ import { useDoubleTapHandler } from '@/composables/handles/useDoubleTapHandler'
 const fileInput = ref<HTMLInputElement>()
 const fileInputVideo = ref<HTMLInputElement>()
 const editModeEnabled = ref<boolean>(false)
+const clickedStates = ref<Record<number, boolean>>({});
+const haptic = useHapticFeedback()
+
 
 // Components
 import IconPlus from './../icons/IconPlus.vue'
@@ -116,7 +119,13 @@ function handleDragStop(event: Event, el: GridItemHTMLElement) {
   useHapticFeedback().selectionChanged()
 }
 
-function handleItemTouch(e: Event) {
+function handleItemTouch(e: Event, index: number) {
+  clickedStates.value[index] = true;
+  haptic.impactOccurred('light')
+
+  setTimeout(() => {
+    clickedStates.value[index] = false;
+  }, 200);
 }
 
 function editable() {
@@ -153,6 +162,7 @@ function editable() {
 
   <!-- Grid Items -->
       <!-- @image-click="(img, idx) => handleDoubleTap(idx, [img, idx], openNodePage)" -->
+      <!-- @image-click="(node) => handleDoubleTap(0, [node], openNodePage)" -->
   <div class="grid-wrapper flex gap-2">
     <div class="grid-stack w-[103%]">
       <GridItem
@@ -161,11 +171,12 @@ function editable() {
         :key="item.id"
         :item="item as Node"
         :show-remove="editModeEnabled"
-        @touch="handleItemTouch"
-        @click="handleItemTouch"
+        :class="clickedStates[index] ? 'scale-105' : ''"
+        @touch="(e: Event) => handleItemTouch(e, index)"
+        @click="(e: Event) => handleItemTouch(e, index)"
         @remove="removeGridItem"
-        @image-click="(node) => handleDoubleTap(0, [node], openNodePage)"
-        @video-click="(node) => handleDoubleTap(0, [node], openVideoPreview)"
+        @image-click="(node) => !editModeEnabled ? openNodePage(node) : ''"
+        @video-click="(node) => !editModeEnabled ? openVideoPreview(node) : ''"
       />
     </div>
     <div class="grid-stack-scroll w-6 h-full" v-if="editModeEnabled">
