@@ -16,6 +16,7 @@ import { useDoubleTapHandler } from '@/composables/handles/useDoubleTapHandler'
 
 const fileInput = ref<HTMLInputElement>()
 const fileInputVideo = ref<HTMLInputElement>()
+const editModeEnabled = ref<boolean>(false)
 
 // Components
 import IconPlus from './../icons/IconPlus.vue'
@@ -23,10 +24,11 @@ import UploadPopover from '../main/UploadPopover.vue'
 import GridItem from './GridItem.vue'
 import type {Node} from '@/composables/types/grid.type'
 import {showShare} from '@/composables/mainButton/useShare'
+import IconGrid from '../icons/IconGrid.vue'
+import EmptyGridState from '../consumer/EmptyGridState.vue'
 
 // Refs
 const gridFirstLoaded = ref(false)
-const visibleRemove = ref(false)
 
 // Services initialization (Dependency Injection)
 const { gridInstance, initializeGrid, destroyGrid } = useGridInitializer()
@@ -59,9 +61,9 @@ onUnmounted(() => {
 // Initialization
 async function initializeGridComponents() {
   initializeGrid({margin: '5px', column: 4, float: false })
+  gridInstance.value?.setStatic(!editModeEnabled.value)
 
   await loadGridData()
-  gridFirstLoaded.value = true
 
   if (gridItems.value) {
     nextTick(() => {
@@ -93,6 +95,10 @@ function setupEventListeners() {
   setupUploadHandlers()
 }
 
+
+function handleResizeStart(event: Event, el: GridItemHTMLElement) {
+}
+
 // Event handlers
 function handleGridChange(event: Event, changedItems: GridStackNode[]) {
   if (!gridFirstLoaded.value) return
@@ -100,12 +106,7 @@ function handleGridChange(event: Event, changedItems: GridStackNode[]) {
   debouncedUpdateGrid(saveGridData())
 }
 
-function handleResizeStart(event: Event, el: GridItemHTMLElement) {
-  hideRemoveIcons()
-}
-
 function handleDragStart(event: Event, el: GridItemHTMLElement) {
-  hideRemoveIcons()
   gridInstance.value?.enableMove(false)
   useHapticFeedback().impactOccurred('light')
 }
@@ -116,64 +117,63 @@ function handleDragStop(event: Event, el: GridItemHTMLElement) {
 }
 
 function handleItemTouch(e: Event) {
-  if ((e.target as HTMLElement).classList.contains('ui-resizable-handle')) {
-    return
-  }
-
-  const target = e.target as HTMLElement
-  hideRemoveIcons()
-
-  const gridItem = target.closest('.grid-stack-item')
-  gridItem?.classList.add('ui-remove-visible')
-  visibleRemove.value = !visibleRemove.value
 }
 
-function hideRemoveIcons() {
-  visibleRemove.value = false
-  document.querySelectorAll('.grid-stack-item').forEach(el => {
-    el.classList.remove('ui-remove-visible')
-  })
+function editable() {
+  editModeEnabled.value = !editModeEnabled.value
+
+  gridInstance.value?.setStatic(!editModeEnabled.value)
 }
+
 </script>
 
 <template>
-  <!-- Upload Controls -->
-  <div class="add-new-widget-wapper">
-    <UploadPopover
-      @upload-image="triggerImageUpload"
-      @upload-video="triggerVideoUpload"
-    >
-      <template #content>
-        <div class="add-new-widget" type="button">
-          <IconPlus />
-          <label style="display: none">
-            <input type="file" id="newImage" name="newImage" accept=".png, .jpg, .webp, .jpeg" ref="fileInput" />
-            <input type="file" id="newVideo" name="newVideo" accept="video/*" ref="fileInputVideo" />
-          </label>
-        </div>
-      </template>
-    </UploadPopover>
+  <div class="edit-mode p-3 bg-zinc-800 rounded-lg flex justify-center items-center" :class="editModeEnabled ? 'bg-zinc-700' : ''" @click="editable">
+    <IconGrid :solid="editModeEnabled"/>
   </div>
+  <!-- Upload Controls -->
+  <Transition mode="out-in">
+    <div class="add-new-widget-wapper" v-if="!editModeEnabled">
+      <UploadPopover
+        @upload-image="triggerImageUpload"
+        @upload-video="triggerVideoUpload"
+      >
+        <template #content>
+          <div class="add-new-widget p-3 bg-zinc-800 rounded-lg flex justify-center items-center" type="button">
+            <IconPlus />
+            <label style="display: none">
+              <input type="file" id="newImage" name="newImage" accept=".png, .jpg, .webp, .jpeg" ref="fileInput" />
+              <input type="file" id="newVideo" name="newVideo" accept="video/*" ref="fileInputVideo" />
+            </label>
+          </div>
+        </template>
+      </UploadPopover>
+    </div>
+  </Transition>
 
   <!-- Grid Items -->
       <!-- @image-click="(img, idx) => handleDoubleTap(idx, [img, idx], openNodePage)" -->
-  <div class="grid-stack">
-    <GridItem
-      v-for="(item, index) in gridItems"
-      :index="index"
-      :key="item.id"
-      :item="item as Node"
-      :show-remove="visibleRemove"
-      @touch="handleItemTouch"
-      @click="handleItemTouch"
-      @remove="removeGridItem"
-      @image-click="(node) => handleDoubleTap(0, [node], openNodePage)"
-      @video-click="(node) => handleDoubleTap(0, [node], openVideoPreview)"
-    />
+  <div class="grid-wrapper flex gap-2">
+    <div class="grid-stack w-[103%]">
+      <GridItem
+        v-for="(item, index) in gridItems"
+        :index="index"
+        :key="item.id"
+        :item="item as Node"
+        :show-remove="editModeEnabled"
+        @touch="handleItemTouch"
+        @click="handleItemTouch"
+        @remove="removeGridItem"
+        @image-click="(node) => handleDoubleTap(0, [node], openNodePage)"
+        @video-click="(node) => handleDoubleTap(0, [node], openVideoPreview)"
+      />
+    </div>
+    <div class="grid-stack-scroll w-6 h-full" v-if="editModeEnabled">
+    </div>
   </div>
 
   <!-- Empty State -->
-  <EmptyGridState v-if="shouldShowEmptyState" />
+  <EmptyGridState v-if="shouldShowEmptyState" :visible="shouldShowEmptyState"/>
 
   <!-- Share Sheet -->
   <ShareSheet

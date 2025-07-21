@@ -19,6 +19,7 @@ declare module 'vue' {
     IconEcosystem: typeof import('./src/components/icons/IconEcosystem.vue')['default']
     IconFire: typeof import('./src/components/icons/IconFire.vue')['default']
     IconGoga: typeof import('./src/components/icons/IconGoga.vue')['default']
+    IconGrid: typeof import('./src/components/icons/IconGrid.vue')['default']
     IconInstagram: typeof import('./src/components/icons/IconInstagram.vue')['default']
     IconLike: typeof import('./src/components/icons/IconLike.vue')['default']
     IconLink: typeof import('./src/components/icons/IconLink.vue')['default']
