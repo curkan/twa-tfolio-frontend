@@ -17,8 +17,8 @@ import { NodeType, type Node } from '@/composables/types/grid.type'
       </div>
       <div class="name font-bold">Nikita</div>
     </div>
-    <div class="subscribe">Subscribe</div>
-    <div class="menu">dot</div>
+    <div class="subscribe hidden">Subscribe</div>
+    <div class="menu hidden">dot</div>
   </div>
 </template>
 <style scoped lang="scss">

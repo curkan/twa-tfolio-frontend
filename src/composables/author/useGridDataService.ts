@@ -7,25 +7,35 @@ export function useGridDataService(gridInstance: Ref<GridStack | null>) {
   const gridItems = ref<GridStackWidget[]>([])
 
   const loadGridData = async () => {
+    let needAwaitRequest = false
+
     try {
       const cache = await caches.open('grid-cache-v1')
       const cachedResponse = await cache.match('api/v1/common/grid')
 
-      if (cachedResponse) {
+      if (cachedResponse !== undefined) {
         const cachedData = await cachedResponse.json()
         gridData.value = cachedData
         gridItems.value = transformNodesToWidgets(gridData.value!.grid)
 
         // Обновляем UI с кешированными данными
         await nextTick()
+      } else {
+        needAwaitRequest = true
       }
     } catch {
 
     }
 
-    useGetGridData().then(() => {
-        gridItems.value = transformNodesToWidgets(gridData.value!.grid)
-    })
+    if (needAwaitRequest) {
+      await useGetGridData().then(() => {
+          gridItems.value = transformNodesToWidgets(gridData.value!.grid)
+      })
+    } else {
+      useGetGridData().then(() => {
+          gridItems.value = transformNodesToWidgets(gridData.value!.grid)
+      })
+    }
   }
 
   const addGridItem = (node: Node) => {

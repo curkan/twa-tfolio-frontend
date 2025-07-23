@@ -7,7 +7,7 @@ import IconFire from '../icons/IconFire.vue';
   <div class="node-item-bottom my-2">
     <section class="elements grid grid-cols-2">
       <div class="left-elements flex">
-        <div class="btn-element p-2 pl-0">
+        <div class="btn-element p-2 pl-0 pr-0">
           <span>
             <IconFire />
           </span>
