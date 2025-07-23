@@ -27,6 +27,10 @@
     "header": "Пользователь еще не загрузил портфолио",
     "text": "Возможно, пользователь только занимается оформлением портфолио, приходите позже."
   },
+  "vant": {
+    "confirmButtonText": "Ok",
+    "cancelButtonText": "Cancel"
+  },
   "userDisplayName": "Отображаемое имя",
   "userBiography": "О себе",
   "writeAboutYou": "Напишите что-то про себя",

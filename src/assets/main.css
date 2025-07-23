@@ -1,3 +1,4 @@
+@import 'vant/lib/index.css';
 @import './base.css';
 @import './transitions.css';
 @import "tailwindcss";

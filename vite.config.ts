@@ -14,11 +14,13 @@ export default defineConfig({
     vue(),
     // vueDevTools(),
     AutoImport({
-      imports: [VantImports()],
+      // imports: [VantImports()],
       resolvers: [VantResolver()],
     }),
     Components({
-      resolvers: [VantResolver()],
+      resolvers: [VantResolver({
+        importStyle: false,
+      })],
     }),
   ],
 

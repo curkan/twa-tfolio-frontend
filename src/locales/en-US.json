@@ -27,12 +27,17 @@
     "header": "User has not uploaded a portfolio yet",
     "text": "Maybe the user is just doing portfolio design, come back later."
   },
+  "vant": {
+    "confirmButtonText": "Ok",
+    "cancelButtonText": "Cancel"
+  },
   "userDisplayName": "Display name",
   "userBiography": "About you",
   "writeAboutYou": "Write about you",
   "checkedShowButtonContact": "Show button «Send me»",
   "sendMe": "Send me",
   "editProfile": "Edit profile",
+  "description": "Description",
   "dropzone": {
     "dictDefaultMessage": "Drag and drop files here to upload",
     "dictFallbackMessage": "Your browser does not support drag'n'drop file uploads.",

@@ -10,14 +10,23 @@ const actions = ref<PopoverAction[]>([
     slug: 'upload-image',
   },
   {
+    text: 'Загрузить коллекцию',
+    icon: 'add-o',
+    slug: 'upload',
+  },
+  {
     text: 'Загрузить видео',
     icon: 'video',
     slug: 'upload-video',
   },
 ])
-const emit = defineEmits(['uploadImage', 'uploadVideo'])
+const emit = defineEmits(['uploadImage', 'uploadVideo', 'upload'])
 
 const onSelect = (action) => {
+  if (action.slug == 'upload') {
+    emit('upload')
+  }
+
   if (action.slug == 'upload-image') {
     emit('uploadImage')
   }

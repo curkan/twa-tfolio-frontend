@@ -29,6 +29,7 @@ import type {Node} from '@/composables/types/grid.type'
 import {showShare} from '@/composables/mainButton/useShare'
 import IconGrid from '../icons/IconGrid.vue'
 import EmptyGridState from '../consumer/EmptyGridState.vue'
+import router from '@/router'
 
 // Refs
 const gridFirstLoaded = ref(false)
@@ -144,12 +145,13 @@ function editable() {
   <Transition mode="out-in">
     <div class="add-new-widget-wapper" v-if="!editModeEnabled">
       <UploadPopover
+        @upload="() => router.push('/upload')"
         @upload-image="triggerImageUpload"
         @upload-video="triggerVideoUpload"
       >
         <template #content>
           <div class="add-new-widget p-3 bg-zinc-800 rounded-lg flex justify-center items-center" type="button">
-            <IconPlus />
+            <IconPlus :width="20" :height="20" />
             <label style="display: none">
               <input type="file" id="newImage" name="newImage" accept=".png, .jpg, .webp, .jpeg" ref="fileInput" />
               <input type="file" id="newVideo" name="newVideo" accept="video/*" ref="fileInputVideo" />
