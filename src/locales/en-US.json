@@ -5,7 +5,8 @@
     "copied": "Copied",
     "cancel": "Cancel",
     "displayNameNotFound": "Name is not set",
-    "biographyNotFound": "Biography is not set"
+    "biographyNotFound": "Biography is not set",
+    "liked": "Fired"
   },
   "errors": {
     "user_not_found": "User not found",

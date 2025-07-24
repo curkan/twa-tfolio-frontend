@@ -18,6 +18,7 @@ try {
   console.log(e)
   useViewportStore().isTelegramApp = false
 }
+// useMiniApp().initDataUnsafe.start_param = '917910145'
 </script>
 
 <template>

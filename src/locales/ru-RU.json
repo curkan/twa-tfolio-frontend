@@ -5,7 +5,8 @@
     "copied": "Скопировано",
     "cancel": "Отменить",
     "displayNameNotFound": "Имя не задано",
-    "biographyNotFound": "Биография не задана"
+    "biographyNotFound": "Биография не задана",
+    "liked": "Нравится"
   },
   "errors": {
     "user_not_found": "Пользователь не найден",

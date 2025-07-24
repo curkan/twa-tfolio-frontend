@@ -4,7 +4,7 @@ import NodeTop from '../node/NodeTop.vue';
 import ImageViewer from '../node/ImageViewer.vue';
 import NodeBottom from '../node/NodeBottom.vue';
 import IconEdit from '../icons/IconEdit.vue';
-import {inject, onMounted, ref, watch} from 'vue';
+import {defineAsyncComponent, inject, onMounted, ref, watch} from 'vue';
 import {useI18n} from 'vue-i18n';
 import {showConfirmDialog, showFailToast, showLoadingToast, showSuccessToast} from 'vant';
 import {useViewportStore} from '@/composables/stores/useViewportStore';
@@ -15,10 +15,10 @@ import {useUpdateNode} from '@/composables/author/node/useUpdateNode';
 const hapticFeedback = useHapticFeedback()
 import { isVersionAtLeast } from 'vue-tg'
 import {useNodeStore} from '@/stores/useNodeStore';
+import {useLikeNode} from '@/composables/author/node/useLikeNode';
 
 const about = ref()
 const disabledBackSwipe = ref(false)
-const updateNode = inject('node-provide')
 
 const props = defineProps({
   item: {
@@ -112,6 +112,15 @@ watch(
   },
 )
 
+const handleDoubleTap = () => {
+  if (useNodeStore().currentNode?.meta.is_liked === false) {
+    useLikeNode(Number(props.item.id)).then((data) => {
+      useNodeStore().currentNode = data.data as Node
+    }).finally(() => {
+
+    })
+  }
+}
 
 onMounted(() => {
   about.value = props.item.description
@@ -126,11 +135,11 @@ onMounted(() => {
   <div
     class="node-item w-full"
   >
-    <NodeTop class="w-full"/>
+    <NodeTop class="w-full" :user="item.user"/>
     <div class="node-item-content">
       <template v-if="item.type === NodeType.image">
         <div class="img">
-          <ImageViewer :image-src="item.image.original"/>
+          <ImageViewer :image-src="item.image.original" @double-click="handleDoubleTap"/>
         </div>
       </template>
       <template v-if="item.type === NodeType.video">
@@ -139,7 +148,7 @@ onMounted(() => {
         </div>
       </template>
     </div>
-    <NodeBottom class="w-full" :description="item.description"/>
+    <NodeBottom class="w-full" :node="item" :user="item.user"/>
   </div>
 
   <van-popup

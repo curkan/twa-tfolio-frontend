@@ -29,6 +29,9 @@ importers:
       gridstack:
         specifier: ^11.3.0
         version: 11.3.0
+      gsap:
+        specifier: ^3.13.0
+        version: 3.13.0
       pinia:
         specifier: ^2.3.1
         version: 2.3.1(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
@@ -1576,6 +1579,9 @@ packages:
 
   gridstack@11.3.0:
     resolution: {integrity: sha512-Z0eRovKcZTRTs3zetJwjO6CNwrgIy845WfOeZGk8ybpeMCE8fMA8tScyKU72Y2M6uGHkjgwnjflglvPiv+RcBQ==}
+
+  gsap@3.13.0:
+    resolution: {integrity: sha512-QL7MJ2WMjm1PHWsoFrAQH/J8wUeqZvMtHO58qdekHpCfhvhSL4gSiz6vJf5EeMP0LOn3ZCprL2ki/gjED8ghVw==}
 
   has-flag@4.0.0:
     resolution: {integrity: sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==}
@@ -4129,6 +4135,8 @@ snapshots:
   graphemer@1.4.0: {}
 
   gridstack@11.3.0: {}
+
+  gsap@3.13.0: {}
 
   has-flag@4.0.0: {}
 

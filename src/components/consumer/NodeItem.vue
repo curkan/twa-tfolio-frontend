@@ -16,7 +16,7 @@ const props = defineProps({
   <div
     class="node-item w-full"
   >
-    <NodeTop class="w-full"/>
+    <NodeTop class="w-full" :user="item.user"/>
     <div class="node-item-content">
       <template v-if="item.type === NodeType.image">
         <div class="img">
@@ -29,7 +29,7 @@ const props = defineProps({
         </div>
       </template>
     </div>
-    <NodeBottom class="w-full"/>
+    <NodeBottom class="w-full" :node="item" :user="item.user"/>
   </div>
 </template>
 <style scoped lang="scss">

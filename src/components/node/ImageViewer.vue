@@ -1,6 +1,11 @@
 <script setup lang="ts">
+import {useDoubleTapHandler} from '@/composables/handles/useDoubleTapHandler'
 import {useViewportStore} from '@/composables/stores/useViewportStore'
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, defineAsyncComponent } from 'vue'
+
+const FiredAnimation = defineAsyncComponent(
+    () => import("@/components/animations/FiredAnimation.vue")
+)
 
 const props = defineProps({
   imageSrc: {
@@ -13,6 +18,7 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['double-click'])
 const image = ref<HTMLImageElement>()
 const scale = ref(1)
 const initialDistance = ref(0)
@@ -27,6 +33,10 @@ const minScale = 1
 const container = ref<HTMLElement>()
 const initialCenter = ref({ x: 0, y: 0 })
 const currentCenter = ref({ x: 0, y: 0 })
+
+const fired = ref<Array<{x: number, y: number}>>([])
+
+const { handleDoubleTap } = useDoubleTapHandler()
 
 watch(
   () => isDragging.value,
@@ -145,6 +155,30 @@ const getDistance = (x1: number, y1: number, x2: number, y2: number) => {
   return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
 }
 
+const removeFired = (index: number) => {
+
+}
+
+const handleDoubleTapFired = (e: MouseEvent | TouchEvent) => {
+  // Получаем координаты клика
+  const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
+  let x, y
+
+  if (e instanceof MouseEvent) {
+    x = e.clientX - rect.left
+    y = e.clientY - rect.top
+  } else {
+    // Для touch событий
+    const touch = e.touches[0] || e.changedTouches[0]
+    x = touch.clientX - rect.left
+    y = touch.clientY - rect.top
+  }
+
+  // Добавляем новое сердечко
+  fired.value.push({ x, y })
+
+  emit('double-click')
+}
 </script>
 
 <template>
@@ -155,6 +189,7 @@ const getDistance = (x1: number, y1: number, x2: number, y2: number) => {
     @touchmove="handleTouchMove"
     @touchend="handleTouchEnd"
     @touchcancel="handleTouchEnd"
+    @click="(e) => handleDoubleTap(1, [], () => handleDoubleTapFired(e))"
   >
     <img
       v-if="imageSrc"
@@ -176,6 +211,13 @@ const getDistance = (x1: number, y1: number, x2: number, y2: number) => {
       playsinline
       draggable="false"
     ></video>
+
+      <FiredAnimation
+        v-for="(heart, index) in fired" :key="index"
+        :x="heart.x"
+        :y="heart.y"
+        @after-leave="removeFired(index)"
+      />
   </div>
 </template>
 
@@ -193,5 +235,10 @@ const getDistance = (x1: number, y1: number, x2: number, y2: number) => {
   transform-origin: center center;
   will-change: transform;
   pointer-events: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 </style>

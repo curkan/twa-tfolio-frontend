@@ -6,25 +6,37 @@ export function useGridDataService() {
   const gridNodes = ref<Node[]>()
 
   const fetchGridData = async (userId: number) => {
+    let needAwaitRequest = false
+    let nameCache = 'api/v1/common/grid/' + userId
+
     try {
       const cache = await caches.open('grid-cache-v1')
-      const cachedResponse = await cache.match('api/v1/common/grid')
+      const cachedResponse = await cache.match(nameCache)
 
-      if (cachedResponse) {
+      if (cachedResponse != undefined) {
         const cachedData = await cachedResponse.json()
         gridData.value = cachedData
         gridNodes.value = gridData.value!.grid
 
         // Обновляем UI с кешированными данными
         await nextTick()
+      } else {
+        needAwaitRequest = true
       }
     } catch {
 
     }
 
-    useGetGridData().then(() => {
-        gridNodes.value = gridData.value!.grid
-    })
+
+    if (needAwaitRequest) {
+      await useGetGridData(userId).then(() => {
+          gridNodes.value = gridData.value!.grid
+      })
+    } else {
+      useGetGridData(userId).then(() => {
+          gridNodes.value = gridData.value!.grid
+      })
+    }
   }
 
   const resetGridData = () => {
@@ -37,3 +49,4 @@ export function useGridDataService() {
     gridNodes
   }
 }
+
