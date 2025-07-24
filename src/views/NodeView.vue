@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import NodeItem from '@/components/node/NodeItem.vue';
+import NodeItem from '@/components/author/NodeItem.vue';
+import ConsumerNodeItem from '@/components/consumer/NodeItem.vue';
 import {useGetNodeData} from '@/composables/grid/useGetNodeData';
 import {useViewportStore} from '@/composables/stores/useViewportStore';
 import type {Node} from '@/composables/types/grid.type';
@@ -8,7 +9,7 @@ import {useNodeStore} from '@/stores/useNodeStore';
 
 import {onMounted} from 'vue';
 import {useRoute} from 'vue-router';
-import {useBackButton, useMiniApp} from 'vue-tg/latest';
+import {useBackButton, useMainButton, useMiniApp} from 'vue-tg/latest';
 
 const backButton = useBackButton()
 
@@ -19,6 +20,8 @@ backButton.onClick(() => {
 })
 
 onMounted(() => {
+  useMainButton().hide()
+
   if (useNodeStore().currentNode === undefined) {
     useGetNodeData(Number(useRoute().params.id)).then((data) => {
       useNodeStore().currentNode = data as Node
@@ -37,7 +40,8 @@ const doSwipeRight = () => {
   <div class="node-container h-full" v-touch:swipe.right="doSwipeRight">
     <Transition>
       <div v-if="useNodeStore().currentNode">
-        <NodeItem :item="useNodeStore().currentNode as Node" />
+        <NodeItem v-if="(useNodeStore().currentNode as Node).meta.owner" :item="useNodeStore().currentNode as Node" />
+        <ConsumerNodeItem v-else :item="useNodeStore().currentNode as Node" />
       </div>
     </Transition>
   </div>

@@ -11,13 +11,7 @@ import {useBackButton, useMiniApp} from 'vue-tg/latest';
 const backButton = useBackButton()
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n({
-  inheritLocale: false, // (опционально) наследует глобальную локаль
-  messages: {
-    en: { messageConfigClosePage: "If you close the page, all unsaved data will be lost" },
-    ru: { messageConfigClosePage: "Если вы закроете страницу, все несохранённые данные будут потеряны" }
-  }
-});
+const { t } = useI18n();
 
 backButton.show()
 backButton.onClick(() => {
@@ -34,7 +28,7 @@ const configClose = () => {
     confirmButtonText: 'Ok',
     cancelButtonText: 'Cancel',
     title: 'Title',
-    message: t('messageConfigClosePage'),
+    message: t('vant.messageConfigClosePage'),
   })
     .then(() => {
       router.push('/')

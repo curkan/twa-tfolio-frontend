@@ -29,7 +29,8 @@
   },
   "vant": {
     "confirmButtonText": "Ok",
-    "cancelButtonText": "Cancel"
+    "cancelButtonText": "Cancel",
+    "messageConfigClosePage": "If you close the page, all unsaved data will be lost"
   },
   "userDisplayName": "Display name",
   "userBiography": "About you",

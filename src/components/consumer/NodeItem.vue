@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { NodeType, type Node } from '@/composables/types/grid.type'
-import NodeTop from './NodeTop.vue';
-import ImageViewer from './ImageViewer.vue';
-import NodeBottom from './NodeBottom.vue';
+import NodeTop from '../node/NodeTop.vue';
+import ImageViewer from '../node/ImageViewer.vue';
+import NodeBottom from '../node/NodeBottom.vue';
 
 const props = defineProps({
   item: {

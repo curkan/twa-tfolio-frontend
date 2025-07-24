@@ -29,7 +29,8 @@
   },
   "vant": {
     "confirmButtonText": "Ok",
-    "cancelButtonText": "Cancel"
+    "cancelButtonText": "Cancel",
+    "messageConfigClosePage": "Если вы закроете страницу, все несохранённые данные будут потеряны" 
   },
   "userDisplayName": "Отображаемое имя",
   "userBiography": "О себе",

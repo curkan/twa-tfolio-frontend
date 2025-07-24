@@ -19,6 +19,10 @@ export interface Node {
   video_url?: string
   image: Image
   internalId?: number | string
+  description: string
+  meta: {
+    owner: boolean
+  }
 }
 
 export interface Image {

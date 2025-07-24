@@ -18,6 +18,7 @@ register();
 import Vue3TouchEvents, {
   type Vue3TouchEventsOptions,
 } from "vue3-touch-events";
+import {useViewportStore} from './composables/stores/useViewportStore'
 
 const app = createApp(App)
 
