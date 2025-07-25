@@ -92,7 +92,7 @@ function handleItemTouch(e: Event, index: number) {
 </script>
 
 <template>
-  <div class="grid-stack">
+  <div class="grid-stack w-[103%]">
     <GridItem
       v-for="(item, index) in gridItems"
       :key="item.id"

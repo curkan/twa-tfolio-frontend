@@ -7,7 +7,7 @@ export function useGridDataService() {
 
   const fetchGridData = async (userId: number) => {
     let needAwaitRequest = false
-    let nameCache = 'api/v1/common/grid/' + userId
+    let nameCache = 'api/v1/common/grid?user_id=' + userId
 
     try {
       const cache = await caches.open('grid-cache-v1')
