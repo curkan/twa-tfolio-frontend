@@ -12,6 +12,7 @@ import { useMainPortfolio } from '@/composables/mainButton/useMainPortfolio'
 import GridItem from './GridItem.vue'
 import EmptyGridState from './EmptyGridState.vue'
 import {useGridDataService} from '@/composables/consumer/useGridDataService'
+import {useNodeStore} from '@/stores/useNodeStore'
 
 const props = defineProps({
   userId: Number,
@@ -48,6 +49,15 @@ onMounted(async () => {
       attachWidgetsToGrid(gridItems.value)
       gridFirstLoaded.value = true
     })
+  }
+
+  if (useNodeStore().currentNode) {
+      const targetElement = document.querySelector(`[internal-id="${useNodeStore().currentNode?.internalId}"]`);
+      nextTick(() => {
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth' }); // Optional: add smooth scrolling
+        }
+      })
   }
 })
 

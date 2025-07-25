@@ -32,6 +32,7 @@ const setOrUnsetLike = async () => {
   localLikesCount.value += wasLiked ? -1 : 1;
 
   isLoading.value = true;
+  console.log(props.node)
   await useLikeNode(Number(props.node.id)).then((data) => {
     useNodeStore().currentNode = data.data as Node
   }).finally(() => {
@@ -65,8 +66,9 @@ const setOrUnsetLike = async () => {
     <!-- </section> -->
     <section class="description">
       <article class="">
-        <span class="username font-bold mr-2">{{user.display_name}}</span>
-        <span>{{node.description}}</span>
+        <span class="username font-bold mr-2">{{user.username}}</span>
+        <span v-if="node.description">{{node.description}}</span>
+        <span class="text-zinc-500" v-else>{{$t('notDesription')}}</span>
       </article>
     </section>
   </div>

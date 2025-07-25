@@ -40,14 +40,17 @@ const showEditNode = ref(false)
 const doSwipeDown = () => {
   if (disabledBackSwipe.value) return
 
-  configClose().then((result) => {
+  confirmClose().then((result) => {
     if (result) {
       showEditNode.value = false
     }
   })
 };
 
-const configClose = async () => {
+const confirmClose = async () => {
+  if (props.item.description === null && about.value == "") return true
+  if (JSON.stringify(about.value) == JSON.stringify(props.item.description)) return true
+
   return showConfirmDialog({
     confirmButtonText: 'Ok',
     cancelButtonText: 'Cancel',
@@ -55,12 +58,14 @@ const configClose = async () => {
     message: t('vant.messageConfigClosePage'),
   })
     .then(() => {
-      return true;
       // on confirm
+      about.value = props.item.description
+
+      return true;
     })
     .catch(() => {
-      return false;
       // on cancel
+      return false;
     });
 }
 
@@ -144,7 +149,7 @@ onMounted(() => {
       </template>
       <template v-if="item.type === NodeType.video">
         <div class="img">
-          <ImageViewer :video-src="item.video_url"/>
+          <ImageViewer :video-src="item.video_url" @double-click="handleDoubleTap"/>
         </div>
       </template>
     </div>
@@ -160,7 +165,7 @@ onMounted(() => {
     :safe-area-inset-bottom="true"
     :style="{ height: '60%' }"
     class="popup-edit-node"
-    :before-close="configClose"
+    :before-close="confirmClose"
   >
     <div class="data h-full flex flex-col gap-2"
       v-touch:swipe.bottom="doSwipeDown"

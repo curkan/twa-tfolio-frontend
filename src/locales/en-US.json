@@ -40,6 +40,7 @@
   "sendMe": "Send me",
   "editProfile": "Edit profile",
   "description": "Description",
+  "notDesription": "Без описания",
   "dropzone": {
     "dictDefaultMessage": "Drag and drop files here to upload",
     "dictFallbackMessage": "Your browser does not support drag'n'drop file uploads.",

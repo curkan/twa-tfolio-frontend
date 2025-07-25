@@ -30,6 +30,7 @@ import {showShare} from '@/composables/mainButton/useShare'
 import IconGrid from '../icons/IconGrid.vue'
 import EmptyGridState from '../consumer/EmptyGridState.vue'
 import router from '@/router'
+import {useNodeStore} from '@/stores/useNodeStore'
 
 // Refs
 const gridFirstLoaded = ref(false)
@@ -52,6 +53,15 @@ onMounted(async () => {
   await initializeGridComponents()
   setupEventListeners()
   setupShare()
+
+  if (useNodeStore().currentNode) {
+      const targetElement = document.querySelector(`[internal-id="${useNodeStore().currentNode?.internalId}"]`);
+      nextTick(() => {
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth' }); // Optional: add smooth scrolling
+        }
+      })
+  }
 })
 
 onUnmounted(() => {
@@ -169,6 +179,7 @@ function editable() {
     <div class="grid-stack w-[103%]">
       <GridItem
         v-for="(item, index) in gridItems"
+        :id="item.id"
         :index="index"
         :key="item.id"
         :item="item as Node"

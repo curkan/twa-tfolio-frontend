@@ -40,6 +40,7 @@
   "sendMe": "Связаться",
   "editProfile": "Редактирование профиля",
   "editSocialLinks": "Редактирование ссылок",
+  "notDesription": "Без описания",
   "dropzone": {
     "dictDefaultMessage": "Перетащите файлы сюда для загрузки",
     "dictFallbackMessage": "Ваш браузер не поддерживает загрузку файлов через drag'n'drop.",

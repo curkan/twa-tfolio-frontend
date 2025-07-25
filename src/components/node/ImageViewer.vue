@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import {useDoubleTapHandler} from '@/composables/handles/useDoubleTapHandler'
 import {useViewportStore} from '@/composables/stores/useViewportStore'
-import { ref, computed, onMounted, onUnmounted, watch, defineAsyncComponent } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, defineAsyncComponent, nextTick } from 'vue'
+import IconInstagram from '../icons/IconInstagram.vue'
+import IconPause from '../icons/IconPause.vue'
+import IconVolume from '../icons/IconVolume.vue'
 
 const FiredAnimation = defineAsyncComponent(
     () => import("@/components/animations/FiredAnimation.vue")
@@ -20,6 +23,7 @@ const props = defineProps({
 
 const emit = defineEmits(['double-click'])
 const image = ref<HTMLImageElement>()
+const video = ref<HTMLVideoElement>()
 const scale = ref(1)
 const initialDistance = ref(0)
 const initialScale = ref(1)
@@ -34,9 +38,28 @@ const container = ref<HTMLElement>()
 const initialCenter = ref({ x: 0, y: 0 })
 const currentCenter = ref({ x: 0, y: 0 })
 
+const videoPaused = ref(false)
+const videoMuted = ref(true)
+
 const fired = ref<Array<{x: number, y: number}>>([])
 
 const { handleDoubleTap } = useDoubleTapHandler()
+
+onMounted(() => {
+  if (props.videoSrc && video.value) {
+    // Устанавливаем muted по умолчанию для автоматического воспроизведения
+    video.value.muted = true
+    video.value.play().catch(e => console.error("Autoplay failed:", e))
+
+    // Следим за изменениями состояния видео
+    video.value.addEventListener('play', () => {
+      videoPaused.value = false
+    })
+    video.value.addEventListener('pause', () => {
+      videoPaused.value = true
+    })
+  }
+})
 
 watch(
   () => isDragging.value,
@@ -155,10 +178,6 @@ const getDistance = (x1: number, y1: number, x2: number, y2: number) => {
   return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
 }
 
-const removeFired = (index: number) => {
-
-}
-
 const handleDoubleTapFired = (e: MouseEvent | TouchEvent) => {
   // Получаем координаты клика
   const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
@@ -179,6 +198,24 @@ const handleDoubleTapFired = (e: MouseEvent | TouchEvent) => {
 
   emit('double-click')
 }
+
+const handleClickVideo = (e: MouseEvent | TouchEvent) => {
+  if (!video.value) return
+
+  if (video.value.paused) {
+    video.value.play()
+  } else {
+    video.value.pause()
+  }
+}
+
+const toggleMute = (e: MouseEvent) => {
+  e.stopPropagation()
+  if (!video.value) return
+
+  video.value.muted = !video.value.muted
+  videoMuted.value = video.value.muted
+}
 </script>
 
 <template>
@@ -189,7 +226,7 @@ const handleDoubleTapFired = (e: MouseEvent | TouchEvent) => {
     @touchmove="handleTouchMove"
     @touchend="handleTouchEnd"
     @touchcancel="handleTouchEnd"
-    @click="(e) => handleDoubleTap(1, [], () => handleDoubleTapFired(e))"
+    @click="(e) => handleDoubleTap(1, [], () => handleDoubleTapFired(e), () => handleClickVideo(e))"
   >
     <img
       v-if="imageSrc"
@@ -200,24 +237,34 @@ const handleDoubleTapFired = (e: MouseEvent | TouchEvent) => {
       alt="Zoomable image"
       draggable="false"
     >
-    <video
+    <div
       v-if="videoSrc"
       class="zoom-image"
-      ref="image"
-      id="player"
-      :style="imageStyle"
-      :src="videoSrc"
-      autoplay
-      playsinline
-      draggable="false"
-    ></video>
+    >
+      <video
+        ref="video"
+        id="player"
+        :style="imageStyle"
+        :src="videoSrc"
+        autoplay
+        loop
+        playsinline
+        draggable="false"
+        muted
+      ></video>
+      <div class="controls absolute top-0 right-0 p-2 flex gap-2 justify-between w-full">
+        <span>
+          <IconPause v-if="videoPaused" @click.stop="handleClickVideo" />
+        </span>
+        <IconVolume :muted="videoMuted" @click.stop="toggleMute" />
+      </div>
+    </div>
 
-      <FiredAnimation
-        v-for="(heart, index) in fired" :key="index"
-        :x="heart.x"
-        :y="heart.y"
-        @after-leave="removeFired(index)"
-      />
+    <FiredAnimation
+      v-for="(heart, index) in fired" :key="index"
+      :x="heart.x"
+      :y="heart.y"
+    />
   </div>
 </template>
 
@@ -240,5 +287,19 @@ const handleDoubleTapFired = (e: MouseEvent | TouchEvent) => {
   -moz-user-select: none;
   -o-user-select: none;
   user-select: none;
+  position: relative;
+}
+
+.controls {
+  pointer-events: auto;
+}
+
+.controls svg {
+  width: 24px;
+  height: 24px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  padding: 4px;
+  color: white;
 }
 </style>
