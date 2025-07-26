@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 import LocaleSwitcher from './../main/LocaleSwitcher.vue'
-import type { IUser } from '@/composables/types/user.type'
 import {
   socialLinksData,
 } from '@/composables/socialLinks/useGetSocialLinksData'
@@ -9,13 +8,13 @@ import { useUserInfoService } from '@/composables/consumer/useUserInfoService'
 import { getFullUrl, getSocialLinkIcon } from '@/composables/socialLinks/socialLinks'
 const {
   fetchUserData,
+  userInfo,
   loading,
   photoUrl,
   displayName,
   biography,
   socialLinks
 } = useUserInfoService()
-const userInfo = ref<IUser>()
 
 const props = defineProps({
   userId: Number,

@@ -55,12 +55,19 @@ onMounted(async () => {
   setupShare()
 
   if (useNodeStore().currentNode) {
-      const targetElement = document.querySelector(`[internal-id="${useNodeStore().currentNode?.internalId}"]`);
-      nextTick(() => {
-        if (targetElement) {
-          targetElement.scrollIntoView({ behavior: 'smooth' }); // Optional: add smooth scrolling
-        }
-      })
+    const targetElement = document.querySelector(`[internal-id="${useNodeStore().currentNode?.internalId}"]`);
+    nextTick(() => {
+      if (targetElement) {
+        const elementRect = targetElement.getBoundingClientRect();
+        const absoluteElementTop = elementRect.top + window.pageYOffset;
+        const middle = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
+
+        window.scrollTo({
+          top: middle,
+          behavior: 'smooth' // Optional: add smooth scrolling
+        });
+      }
+    });
   }
 })
 

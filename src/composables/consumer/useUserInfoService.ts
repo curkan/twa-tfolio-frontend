@@ -99,6 +99,7 @@ export function useUserInfoService() {
   return {
     fetchUserData,
     resetUserData,
+    userInfo,
     loading,
     photoUrl,
     displayName,
