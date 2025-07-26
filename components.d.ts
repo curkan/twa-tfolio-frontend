@@ -25,7 +25,6 @@ declare module 'vue' {
     IconInstagram: typeof import('./src/components/icons/IconInstagram.vue')['default']
     IconLike: typeof import('./src/components/icons/IconLike.vue')['default']
     IconLink: typeof import('./src/components/icons/IconLink.vue')['default']
-    IconMuted: typeof import('./src/components/icons/IconMuted.vue')['default']
     IconPause: typeof import('./src/components/icons/IconPause.vue')['default']
     IconPinterest: typeof import('./src/components/icons/IconPinterest.vue')['default']
     IconPlay: typeof import('./src/components/icons/IconPlay.vue')['default']

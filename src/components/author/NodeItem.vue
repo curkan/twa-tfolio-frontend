@@ -19,6 +19,8 @@ import {useLikeNode} from '@/composables/author/node/useLikeNode';
 
 const about = ref()
 const disabledBackSwipe = ref(false)
+const isTextareaFocused = ref(false)
+const viewportStore = useViewportStore()
 
 const props = defineProps({
   item: {
@@ -38,7 +40,7 @@ const { t } = useI18n({
 const showEditNode = ref(false)
 
 const doSwipeDown = () => {
-  if (disabledBackSwipe.value) return
+  if (disabledBackSwipe.value || isTextareaFocused.value) return
 
   confirmClose().then((result) => {
     if (result) {
@@ -48,23 +50,35 @@ const doSwipeDown = () => {
 };
 
 const confirmClose = async () => {
-  if (props.item.description === null && about.value == "") return true
-  if (JSON.stringify(about.value) == JSON.stringify(props.item.description)) return true
+  if (props.item.description === null && about.value == "") {
+    // Сбрасываем состояние при закрытии
+    isTextareaFocused.value = false
+    viewportStore.disabledBackSwipe = false
+    return true
+  }
+  if (JSON.stringify(about.value) == JSON.stringify(props.item.description)) {
+    // Сбрасываем состояние при закрытии
+    isTextareaFocused.value = false
+    viewportStore.disabledBackSwipe = false
+    return true
+  }
 
   return showConfirmDialog({
-    confirmButtonText: 'Ok',
-    cancelButtonText: 'Cancel',
-    title: 'Title',
+    confirmButtonText: t('vant.confirmButtonText'),
+    cancelButtonText: t('vant.confirmButtonText'),
+    title: t('vant.areYouSure'),
     message: t('vant.messageConfigClosePage'),
   })
     .then(() => {
       // on confirm
       about.value = props.item.description
-
+      // Сбрасываем состояние при подтверждении закрытия
+      isTextareaFocused.value = false
+      viewportStore.disabledBackSwipe = false
       return true;
     })
     .catch(() => {
-      // on cancel
+      // on cancel - не сбрасываем состояние, popup остается открытым
       return false;
     });
 }
@@ -75,6 +89,47 @@ const handleTouchStart = (e: TouchEvent) => {
   setTimeout(() => {
     disabledBackSwipe.value = false
   }, 500)
+}
+
+const handleTextareaFocus = () => {
+  isTextareaFocused.value = true
+  viewportStore.disabledBackSwipe = true
+}
+
+const handleTextareaBlur = () => {
+  isTextareaFocused.value = false
+  viewportStore.disabledBackSwipe = false
+}
+
+const handleTextareaTouchStart = () => {
+  isTextareaFocused.value = true
+  viewportStore.disabledBackSwipe = true
+}
+
+const handleTextareaInput = () => {
+  // Дополнительная проверка при вводе
+  if (!isTextareaFocused.value) {
+    isTextareaFocused.value = true
+    viewportStore.disabledBackSwipe = true
+  }
+}
+
+const handleTextareaAreaTouch = (event: TouchEvent) => {
+  // Проверяем, что касание происходит в области textarea
+  const target = event.target as HTMLElement
+  if (target && (target.tagName === 'TEXTAREA' || target.closest('textarea') || target.closest('.van-field__control'))) {
+    isTextareaFocused.value = true
+    viewportStore.disabledBackSwipe = true
+  }
+}
+
+const handleOutsideClick = (event: TouchEvent) => {
+  const target = event.target as HTMLElement
+  // Если касание НЕ в области textarea, разрешаем свайп
+  if (target && !target.closest('.van-field') && !target.closest('textarea')) {
+    isTextareaFocused.value = false
+    viewportStore.disabledBackSwipe = false
+  }
 }
 
 const saveNode = () => {
@@ -89,6 +144,10 @@ const saveNode = () => {
     }
 
     useNodeStore().updateCurrentNode()
+
+    // Сбрасываем состояние перед закрытием
+    isTextareaFocused.value = false
+    viewportStore.disabledBackSwipe = false
 
     showEditNode.value = false
     showSuccessToast('Success')
@@ -105,14 +164,21 @@ const saveNode = () => {
 
 watch(
   () => showEditNode.value,
-  () => {
-    if (showEditNode.value === true) {
+  (newValue) => {
+    if (newValue === true) {
+      // Сбрасываем состояние при открытии
+      isTextareaFocused.value = false
+      viewportStore.disabledBackSwipe = false
+
       useMainButton().show()
       Telegram.WebApp.offEvent('mainButtonClicked', useChangeShowShare)
       useSave(saveNode)
     } else {
       Telegram.WebApp.offEvent('mainButtonClicked', saveNode)
       useMainButton().hide()
+      // Разрешаем свайп при закрытии popup
+      isTextareaFocused.value = false
+      viewportStore.disabledBackSwipe = false
     }
   },
 )
@@ -163,25 +229,31 @@ onMounted(() => {
     position="bottom"
     :safe-area-inset-top="true"
     :safe-area-inset-bottom="true"
-    :style="{ height: '60%' }"
+    :style="{ height: '80%' }"
     class="popup-edit-node"
     :before-close="confirmClose"
   >
     <div class="data h-full flex flex-col gap-2"
       v-touch:swipe.bottom="doSwipeDown"
+      @touchstart="handleOutsideClick"
     >
       <van-cell-group
-        :title="$t('description')"
+        :title="$t('main.description')"
+        @touchstart="handleTextareaAreaTouch"
       >
         <van-field
           v-model="about"
           type="textarea"
           :autofocus="true"
           name="about"
-          :autosize="{minHeight: 200, maxHeight: 2000}"
+          :autosize="{minHeight: 300, maxHeight: 300}"
           :maxlength="2200"
           :show-word-limit="true"
           :placeholder="t('writeAboutPublication')"
+          @focus="handleTextareaFocus"
+          @blur="handleTextareaBlur"
+          @touchstart="handleTextareaTouchStart"
+          @input="handleTextareaInput"
         />
       </van-cell-group>
       <div class="button p-5" v-if="!useViewportStore().isTelegramApp">

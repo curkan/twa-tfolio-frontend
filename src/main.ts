@@ -10,11 +10,6 @@ import VueLazyLoad from 'vue3-lazyload'
 
 import i18n from './i18n'
 
-// import function to register Swiper custom elements
-import { register } from 'swiper/element/bundle';
-// register Swiper custom elements
-register();
-
 import Vue3TouchEvents, {
   type Vue3TouchEventsOptions,
 } from "vue3-touch-events";

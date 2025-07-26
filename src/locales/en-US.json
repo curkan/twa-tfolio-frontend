@@ -6,7 +6,8 @@
     "cancel": "Cancel",
     "displayNameNotFound": "Name is not set",
     "biographyNotFound": "Biography is not set",
-    "liked": "Fired"
+    "liked": "Fired",
+    "description": "Description"
   },
   "errors": {
     "user_not_found": "User not found",
@@ -29,9 +30,10 @@
     "text": "Maybe the user is just doing portfolio design, come back later."
   },
   "vant": {
-    "confirmButtonText": "Ok",
+    "confirmButtonText": "Yes",
     "cancelButtonText": "Cancel",
-    "messageConfigClosePage": "If you close the page, all unsaved data will be lost"
+    "messageConfigClosePage": "If you close the page, all unsaved data will be lost",
+    "areYouSure": "Are you sure?"
   },
   "userDisplayName": "Display name",
   "userBiography": "About you",

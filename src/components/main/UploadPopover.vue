@@ -9,11 +9,11 @@ const actions = ref<PopoverAction[]>([
     icon: 'add-o',
     slug: 'upload-image',
   },
-  {
-    text: 'Загрузить коллекцию',
-    icon: 'add-o',
-    slug: 'upload',
-  },
+  // {
+  //   text: 'Загрузить коллекцию',
+  //   icon: 'add-o',
+  //   slug: 'upload',
+  // },
   {
     text: 'Загрузить видео',
     icon: 'video',

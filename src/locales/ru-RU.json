@@ -6,7 +6,8 @@
     "cancel": "Отменить",
     "displayNameNotFound": "Имя не задано",
     "biographyNotFound": "Биография не задана",
-    "liked": "Нравится"
+    "liked": "Нравится",
+    "description": "Описание"
   },
   "errors": {
     "user_not_found": "Пользователь не найден",
@@ -29,9 +30,10 @@
     "text": "Возможно, пользователь только занимается оформлением портфолио, приходите позже."
   },
   "vant": {
-    "confirmButtonText": "Ok",
-    "cancelButtonText": "Cancel",
-    "messageConfigClosePage": "Если вы закроете страницу, все несохранённые данные будут потеряны" 
+    "confirmButtonText": "Да",
+    "cancelButtonText": "Отменить",
+    "messageConfigClosePage": "Если вы закроете страницу, все несохранённые данные будут потеряны",
+    "areYouSure": "Вы уверены?"
   },
   "userDisplayName": "Отображаемое имя",
   "userBiography": "О себе",

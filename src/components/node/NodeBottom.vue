@@ -67,7 +67,7 @@ const setOrUnsetLike = async () => {
     <section class="description">
       <article class="">
         <span class="username font-bold mr-2">{{user.username}}</span>
-        <span v-if="node.description">{{node.description}}</span>
+        <span class="pb-5" v-if="node.description">{{node.description}}</span>
         <span class="text-zinc-500" v-else>{{$t('notDesription')}}</span>
       </article>
     </section>
