@@ -16,14 +16,15 @@ export const useGetSocialLinksData = async (userId?: number) => {
     const cache = await caches.open(CACHE_NAME)
     const cachedResponse = await cache.match(url)
 
-    if (cachedResponse) {
+    if (cachedResponse !== undefined) {
       const { data, timestamp } = await cachedResponse.json()
 
       // Отдаем кешированные данные
       socialLinksData.value = data
+    } else {
+      socialLinksData.value = await updateCacheInBackground(url, cache)
     }
 
-    // Асинхронное обновление кеша в фоне
     updateCacheInBackground(url, cache)
 
     // Возвращаем данные из кеша (если были) или undefined (если кеша не было)
@@ -57,6 +58,7 @@ const updateCacheInBackground = async (url: string, cache: Cache) => {
 
     await cache.put(url, cacheResponse)
 
+    return socialLinksData.value
   } catch (error) {
     console.error('Error updating cache in background:', error)
     // Не пробрасываем ошибку, чтобы не влиять на основной поток

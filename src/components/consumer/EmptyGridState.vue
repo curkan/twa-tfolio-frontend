@@ -1,15 +1,9 @@
 <script setup lang="ts">
-const props = defineProps({
-  visible: {
-    type: Boolean,
-    default: false
-  }
-})
 </script>
 
 <template>
-  <div v-if="visible" class="empty-grid">
-    <div class="center">
+  <div class="empty-grid">
+    <div class="center text-center bg-zinc-700 p-5 rounded-2xl">
       <div class="header">{{ $t('consumerPortfolio.header') }}</div>
       <div class="text">{{ $t('consumerPortfolio.text') }}</div>
     </div>

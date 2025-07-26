@@ -204,7 +204,7 @@ function editable() {
   </div>
 
   <!-- Empty State -->
-  <EmptyGridState v-if="shouldShowEmptyState" :visible="shouldShowEmptyState"/>
+  <EmptyGridState v-if="shouldShowEmptyState"/>
 
   <!-- Share Sheet -->
   <ShareSheet
