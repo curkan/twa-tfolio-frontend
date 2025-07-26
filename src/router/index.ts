@@ -18,7 +18,7 @@ const router = createRouter({
     {
       path: '/p/:id',
       name: 'published',
-      component: () => NodeView,
+      component: NodeView,
     },
     {
       path: '/video/:id',
