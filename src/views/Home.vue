@@ -1,13 +1,24 @@
 <script setup lang="ts">
 import { useMiniApp, useMainButton } from 'vue-tg'
-import UserHeader from '@/components/author/UserHeader.vue'
-import UserHeaderConsumer from '@/components/consumer/UserHeader.vue'
-import { onMounted, ref, shallowRef, watch } from 'vue'
+const UserHeader = defineAsyncComponent(
+    () => import("@/components/author/UserHeader.vue")
+)
+
+const UserHeaderConsumer = defineAsyncComponent(
+    () => import("@/components/consumer/UserHeader.vue")
+)
+
+const Grid = defineAsyncComponent(
+    () => import("@/components/author/Grid.vue")
+)
+
+const GridConsumer = defineAsyncComponent(
+    () => import("@/components/consumer/Grid.vue")
+)
+
+import { computed, defineAsyncComponent, onMounted, ref, shallowRef, watch } from 'vue'
 import {useBackButton} from 'vue-tg/latest';
 
-
-import Grid from '@/components/author/Grid.vue'
-import GridConsumer from '@/components/consumer/Grid.vue'
 import { useAppStore } from '@/stores/mainButtonStore'
 import { useAuth } from '@/composables/auth/auth'
 import UploadFiles from '@/components/author/UploadFiles.vue'
@@ -15,15 +26,30 @@ const currentComponentGrid = shallowRef()
 const currentComponentHeader = shallowRef()
 const backButton = useBackButton()
 
+const headerProps = computed(() => {
+  if (currentComponentHeader.value === UserHeaderConsumer) {
+    return { userId: useMiniApp().initDataUnsafe.start_param }
+  }
+  return {}
+})
+
+const gridProps = computed(() => {
+  if (currentComponentGrid.value === GridConsumer) {
+    return { userId: useMiniApp().initDataUnsafe.start_param }
+  }
+
+  return {}
+})
+
 watch(
   () => useAppStore().currentMode,
   () => {
-    if (useAppStore().currentMode == 'author') {
+    if (useAppStore().currentMode === 'author') {
       currentComponentGrid.value = Grid
       currentComponentHeader.value = UserHeader
     }
 
-    if (useAppStore().currentMode == 'cosnumer') {
+    if (useAppStore().currentMode === 'cosnumer') {
       currentComponentGrid.value = GridConsumer
       currentComponentHeader.value = UserHeaderConsumer
     }
@@ -33,7 +59,7 @@ watch(
 onMounted(async () => {
   backButton.hide()
 
-  await useAuth()
+  useAuth()
 
   if (useMiniApp().initDataUnsafe.start_param) {
     useAppStore().currentMode = 'consumer'
@@ -62,19 +88,20 @@ const miniApp = useMiniApp()
 if (miniApp.isVersionAtLeast('8.0')) {
 //or if (window.Telegram.WebApp.isVersionAtLeast('8.0')) {
   window.Telegram.WebApp.requestFullscreen()
+  window.Telegram.WebApp.disableVerticalSwipes()
 }
 </script>
 
 <template>
-  <div style="height: 100%;">
+  <div style="height: 100%; padding: 1em;">
     <UploadFiles />
     <component
       :is="currentComponentHeader"
-      :user-id="useMiniApp().initDataUnsafe.start_param"
+      v-bind="headerProps"
     ></component>
     <component
       :is="currentComponentGrid"
-      :user-id="useMiniApp().initDataUnsafe.start_param"
+      v-bind="gridProps"
     ></component>
   </div>
 </template>

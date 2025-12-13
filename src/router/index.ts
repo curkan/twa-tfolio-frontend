@@ -1,4 +1,5 @@
 import Home from '@/views/Home.vue'
+import NodeView from '@/views/NodeView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -8,6 +9,16 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: Home,
+    },
+    {
+      path: '/upload',
+      name: 'upload',
+      component: () => import('../views/UploadView.vue'),
+    },
+    {
+      path: '/p/:id',
+      name: 'published',
+      component: NodeView,
     },
     {
       path: '/video/:id',

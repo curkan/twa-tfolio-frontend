@@ -5,7 +5,13 @@
     "copied": "Copied",
     "cancel": "Cancel",
     "displayNameNotFound": "Name is not set",
-    "biographyNotFound": "Biography is not set"
+    "biographyNotFound": "Biography is not set",
+    "liked": "Fired",
+    "description": "Description"
+  },
+  "errors": {
+    "user_not_found": "User not found",
+    "copy_failed": "Copy failed"
   },
   "share": {
     "link": "Link"
@@ -23,12 +29,20 @@
     "header": "User has not uploaded a portfolio yet",
     "text": "Maybe the user is just doing portfolio design, come back later."
   },
+  "vant": {
+    "confirmButtonText": "Yes",
+    "cancelButtonText": "Cancel",
+    "messageConfigClosePage": "If you close the page, all unsaved data will be lost",
+    "areYouSure": "Are you sure?"
+  },
   "userDisplayName": "Display name",
   "userBiography": "About you",
   "writeAboutYou": "Write about you",
   "checkedShowButtonContact": "Show button «Send me»",
   "sendMe": "Send me",
   "editProfile": "Edit profile",
+  "description": "Description",
+  "notDesription": "Без описания",
   "dropzone": {
     "dictDefaultMessage": "Drag and drop files here to upload",
     "dictFallbackMessage": "Your browser does not support drag'n'drop file uploads.",

@@ -5,7 +5,13 @@
     "copied": "Скопировано",
     "cancel": "Отменить",
     "displayNameNotFound": "Имя не задано",
-    "biographyNotFound": "Биография не задана"
+    "biographyNotFound": "Биография не задана",
+    "liked": "Нравится",
+    "description": "Описание"
+  },
+  "errors": {
+    "user_not_found": "Пользователь не найден",
+    "copy_failed": "Ошибка при копировании"
   },
   "share": {
     "link": "Ссылка"
@@ -23,6 +29,12 @@
     "header": "Пользователь еще не загрузил портфолио",
     "text": "Возможно, пользователь только занимается оформлением портфолио, приходите позже."
   },
+  "vant": {
+    "confirmButtonText": "Да",
+    "cancelButtonText": "Отменить",
+    "messageConfigClosePage": "Если вы закроете страницу, все несохранённые данные будут потеряны",
+    "areYouSure": "Вы уверены?"
+  },
   "userDisplayName": "Отображаемое имя",
   "userBiography": "О себе",
   "writeAboutYou": "Напишите что-то про себя",
@@ -30,6 +42,7 @@
   "sendMe": "Связаться",
   "editProfile": "Редактирование профиля",
   "editSocialLinks": "Редактирование ссылок",
+  "notDesription": "Без описания",
   "dropzone": {
     "dictDefaultMessage": "Перетащите файлы сюда для загрузки",
     "dictFallbackMessage": "Ваш браузер не поддерживает загрузку файлов через drag'n'drop.",

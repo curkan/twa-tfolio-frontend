@@ -1,39 +1,27 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 import LocaleSwitcher from './../main/LocaleSwitcher.vue'
-import type { IUser } from '@/composables/types/user.type'
-import { useUserInfo } from '@/composables/user/useUserInfo'
 import {
   socialLinksData,
-  useGetSocialLinksData,
 } from '@/composables/socialLinks/useGetSocialLinksData'
-import type { ISocialLinks } from '@/composables/types/social-links.type'
+import { useUserInfoService } from '@/composables/consumer/useUserInfoService'
 import { getFullUrl, getSocialLinkIcon } from '@/composables/socialLinks/socialLinks'
-const displayName = ref()
-const photoUrl = ref()
-const biography = ref()
-const loading = ref(true)
-const userInfo = ref<IUser>()
-const socialLinks = ref<ISocialLinks[]>()
+const {
+  fetchUserData,
+  userInfo,
+  loading,
+  photoUrl,
+  displayName,
+  biography,
+  socialLinks
+} = useUserInfoService()
 
 const props = defineProps({
   userId: Number,
 })
 
 onMounted(() => {
-  useUserInfo(Number(props.userId)).then((response) => {
-    loading.value = false
-    if (response === undefined) return
-
-    userInfo.value = response
-    photoUrl.value = response.photo_url
-    displayName.value = response.display_name
-    biography.value = response.biography
-  })
-
-  useGetSocialLinksData(props.userId).then(() => {
-    socialLinks.value = socialLinksData.value
-  })
+  fetchUserData(Number(props.userId))
 })
 </script>
 
@@ -50,7 +38,7 @@ onMounted(() => {
       <div v-if="loading">
         <van-skeleton title :row="1" />
       </div>
-      <div class="username" v-if="!loading">
+      <div class="username font-bold" v-if="!loading">
         {{ displayName }}
       </div>
       <div class="biography">{{ biography }}</div>

@@ -1,8 +1,4 @@
-import { ref } from 'vue'
-import type { GridData } from '../types/grid.type'
 import { useApiStore } from '../useApiStore'
-
-export const gridData = ref<GridData>()
 
 export const useUpdateGrid = async (nodes: any[]) => {
   return useApiStore()

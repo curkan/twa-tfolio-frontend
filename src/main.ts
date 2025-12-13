@@ -8,12 +8,12 @@ import App from './App.vue'
 import router from './router'
 import VueLazyLoad from 'vue3-lazyload'
 
-import 'vant/lib/index.css'
 import i18n from './i18n'
 
 import Vue3TouchEvents, {
   type Vue3TouchEventsOptions,
 } from "vue3-touch-events";
+import {useViewportStore} from './composables/stores/useViewportStore'
 
 const app = createApp(App)
 

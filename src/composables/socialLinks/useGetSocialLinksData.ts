@@ -1,23 +1,66 @@
+// src/composables/social/useGetSocialLinksData.ts
 import { ref } from 'vue'
 import { useApiStore } from '../useApiStore'
 import type { ISocialLinks } from '../types/social-links.type'
 
 export const socialLinksData = ref<ISocialLinks[]>()
 
-export const useGetSocialLinksData = async (userId?: Number) => {
-  let query = ''
-  if (userId !== undefined) {
-    query = '?user_id=' + userId
+const CACHE_NAME = 'social-links-cache-v1'
+
+export const useGetSocialLinksData = async (userId?: number) => {
+  const query = userId !== undefined ? `?user_id=${userId}` : ''
+  const url = `api/v1/common/social-links${query}`
+
+  try {
+    // Сначала проверяем кеш
+    const cache = await caches.open(CACHE_NAME)
+    const cachedResponse = await cache.match(url)
+
+    if (cachedResponse !== undefined) {
+      const { data, timestamp } = await cachedResponse.json()
+
+      // Отдаем кешированные данные
+      socialLinksData.value = data
+    } else {
+      socialLinksData.value = await updateCacheInBackground(url, cache)
+    }
+
+    updateCacheInBackground(url, cache)
+
+    // Возвращаем данные из кеша (если были) или undefined (если кеша не было)
+    return socialLinksData.value
+
+  } catch (error) {
+    console.error('Error fetching social links:', error)
+    throw error
   }
+}
 
-  return useApiStore()
-    .get('api/v1/common/social-links' + query)
-    .then((response) => {
-      socialLinksData.value = response.data
+// Функция для асинхронного обновления кеша
+const updateCacheInBackground = async (url: string, cache: Cache) => {
+  try {
+    const response = await useApiStore().get(url)
 
-      return socialLinksData.value
+    // Обновляем реактивную переменную
+    socialLinksData.value = response.data
+
+    // Обновляем кеш
+    const cacheData = {
+      data: response.data,
+      timestamp: Date.now()
+    }
+
+    const cacheResponse = new Response(JSON.stringify(cacheData), {
+      headers: {
+        'Content-Type': 'application/json'
+      }
     })
-    .catch((error) => {
-      console.error('Error fetching data:', error)
-    })
+
+    await cache.put(url, cacheResponse)
+
+    return socialLinksData.value
+  } catch (error) {
+    console.error('Error updating cache in background:', error)
+    // Не пробрасываем ошибку, чтобы не влиять на основной поток
+  }
 }

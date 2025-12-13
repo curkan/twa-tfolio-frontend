@@ -2,6 +2,7 @@ import { fileURLToPath, URL } from 'node:url'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import tailwindcss from '@tailwindcss/vite'
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import { VantImports, VantResolver } from '@vant/auto-import-resolver';
@@ -9,16 +10,23 @@ import { VantImports, VantResolver } from '@vant/auto-import-resolver';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
+    tailwindcss(),
     vue(),
     // vueDevTools(),
     AutoImport({
-      imports: [VantImports()],
+      // imports: [VantImports()],
       resolvers: [VantResolver()],
     }),
     Components({
-      resolvers: [VantResolver()],
+      resolvers: [VantResolver({
+        importStyle: false,
+      })],
     }),
   ],
+
+  server: {
+    port: 5173,
+  },
 
   resolve: {
     alias: {
